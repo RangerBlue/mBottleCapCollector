@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">mBottleCapCollector</string>
+    <string name="go_to_camera">Go to camera</string>
+    <string name="take_picture">Take picture</string>
+</resources>
