@@ -30,6 +30,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,9 +44,10 @@ import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
 
-    private static final String TAG = "AndroidCameraApi";
+    private static final String TAG = "CameraActivity";
     private Button takePictureButton;
     private TextureView textureView;
+    private RelativeLayout overlay;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -75,6 +77,7 @@ public class CameraActivity extends AppCompatActivity {
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         assert takePictureButton != null;
+        overlay = (RelativeLayout) findViewById(R.id.overlay);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +90,7 @@ public class CameraActivity extends AppCompatActivity {
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             //open your camera here
             openCamera();
+            setOverlay();
         }
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -324,5 +328,16 @@ public class CameraActivity extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
+    }
+
+    private void setOverlay(){
+        int previewWidth = textureView.getMeasuredWidth(),
+                previewHeight = textureView.getMeasuredHeight();
+
+        // Set the height of the overlay so that it makes the preview a square
+        RelativeLayout.LayoutParams overlayParams = (RelativeLayout.LayoutParams) overlay.getLayoutParams();
+        Log.e(TAG, "Height of camera preview "+ previewHeight + "width of camera " + previewWidth);
+        overlayParams.height = previewHeight - previewWidth;
+        overlay.setLayoutParams(overlayParams);
     }
 }
