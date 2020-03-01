@@ -51,6 +51,7 @@ public class CameraActivity extends AppCompatActivity {
     private Button takePictureButton;
     private TextureView textureView;
     private RelativeLayout overlay;
+    private RelativeLayout rootLayout;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -82,6 +83,8 @@ public class CameraActivity extends AppCompatActivity {
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         assert takePictureButton != null;
         overlay = (RelativeLayout) findViewById(R.id.overlay);
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+        rootLayout.addView(new SquareOverlay(getApplicationContext()));
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
