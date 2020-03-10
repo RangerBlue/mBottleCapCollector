@@ -4,14 +4,25 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.View;
 
 public class SquareOverlay extends View {
-    Paint paint = new Paint();
+    private Paint paint = new Paint();
+    private double ratio = 0.4;
+    private Rect rect;
+    private int radius;
+    private int deviceWidth;
+    private Point circleCenter;
 
-    public SquareOverlay(Context context) {
+
+    public SquareOverlay(Context context, int deviceWidth) {
         super(context);
+        this.deviceWidth = deviceWidth;
+        rect = new Rect(220, 200, 520, 500);
+        radius = (int)(ratio*deviceWidth)/2;
+        circleCenter = new Point(deviceWidth/2,deviceWidth/2);
     }
 
     @Override
@@ -19,7 +30,12 @@ public class SquareOverlay extends View {
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(6);
-        Rect rect = new Rect(220, 200, 520, 500);
-        canvas.drawRect(rect, paint );
+        for(int i=0; i<deviceWidth ; i++){
+            canvas.drawCircle(circleCenter.x, circleCenter.y, radius+i, paint);
+        }
+    }
+
+    public Rect getRect() {
+        return rect;
     }
 }

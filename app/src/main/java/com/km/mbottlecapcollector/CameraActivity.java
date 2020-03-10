@@ -52,6 +52,7 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView textureView;
     private RelativeLayout overlay;
     private RelativeLayout rootLayout;
+    private SquareOverlay screenSquare;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -82,18 +83,20 @@ public class CameraActivity extends AppCompatActivity {
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         assert takePictureButton != null;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        deviceWidth = displayMetrics.widthPixels;
         overlay = (RelativeLayout) findViewById(R.id.overlay);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
-        rootLayout.addView(new SquareOverlay(getApplicationContext()));
+        screenSquare = new SquareOverlay(getApplicationContext(), deviceWidth);
+        rootLayout.addView(screenSquare);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
             }
         });
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        deviceWidth = displayMetrics.widthPixels;
+
     }
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -168,8 +171,8 @@ public class CameraActivity extends AppCompatActivity {
             if (characteristics != null) {
                 jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
             }
-            int width = 640;
-            int height = 480;
+            int width = imageDimension.getWidth();
+            int height = imageDimension.getHeight();
             if (jpegSizes != null && 0 < jpegSizes.length) {
                 width = jpegSizes[0].getWidth();
                 height = jpegSizes[0].getHeight();
