@@ -10,7 +10,7 @@ import android.view.View;
 
 public class SquareOverlay extends View {
     private Paint paint = new Paint();
-    private double ratio = 0.4;
+    private double ratio = 0.3;
     private Rect rect;
     private int radius;
     private int deviceWidth;
@@ -29,7 +29,7 @@ public class SquareOverlay extends View {
     public void onDraw(Canvas canvas) {
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(6);
+        paint.setStrokeWidth(2);
         for(int i=0; i<deviceWidth ; i++){
             canvas.drawCircle(circleCenter.x, circleCenter.y, radius+i, paint);
         }

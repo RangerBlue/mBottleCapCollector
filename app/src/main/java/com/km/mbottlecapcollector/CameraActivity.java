@@ -1,11 +1,18 @@
 package com.km.mbottlecapcollector;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
@@ -19,6 +26,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -48,6 +56,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -110,6 +120,7 @@ public class CameraActivity extends AppCompatActivity {
         screenSquare = new SquareOverlay(getApplicationContext(), deviceWidth);
         rootLayout.addView(screenSquare);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.O)
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
@@ -178,6 +189,7 @@ public class CameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     protected void takePicture() {
         if(null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
@@ -206,7 +218,8 @@ public class CameraActivity extends AppCompatActivity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
+            final File fileSquare = new File(Environment.getExternalStorageDirectory()+"/BottleCap/"+ LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()+"square.jpg");
+            final File fileCircle = new File(Environment.getExternalStorageDirectory()+"/BottleCap/"+ LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()+"circle.jpg");
             cameraImageRatio = highestImageWidth/cameraPreviewWidth;
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
@@ -223,10 +236,15 @@ public class CameraActivity extends AppCompatActivity {
                                 (int)(cameraImageRatio*deviceWidth*(1-screenSquare.getRatio())/2),
                                 (int)((deviceWidth*screenSquare.getRatio()*cameraImageRatio)),
                                 (int)((deviceWidth*screenSquare.getRatio()*cameraImageRatio)));
+                        Bitmap circleBitmap = getCircledBitmap(squareBitmap);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] outputArray = stream.toByteArray();
-                        save(outputArray);
+                        byte[] outputArraySquare = stream.toByteArray();
+                        save(outputArraySquare, fileSquare);
+                        ByteArrayOutputStream streamCircle = new ByteArrayOutputStream();
+                        circleBitmap.compress(Bitmap.CompressFormat.PNG, 100, streamCircle);
+                        byte[] outputArrayCircle = streamCircle.toByteArray();
+                        save(outputArrayCircle, fileCircle);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -237,7 +255,7 @@ public class CameraActivity extends AppCompatActivity {
                         }
                     }
                 }
-                private void save(byte[] bytes) throws IOException {
+                private void save(byte[] bytes, File file) throws IOException {
                     OutputStream output = null;
                     try {
                         output = new FileOutputStream(file);
@@ -246,6 +264,7 @@ public class CameraActivity extends AppCompatActivity {
                         if (null != output) {
                             output.close();
                         }
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                     }
                 }
             };
@@ -381,5 +400,20 @@ public class CameraActivity extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
+    }
+
+    public static Bitmap getCircledBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
     }
 }
