@@ -38,4 +38,8 @@ public class SquareOverlay extends View {
     public Rect getRect() {
         return rect;
     }
+
+    public double getRatio() {
+        return ratio;
+    }
 }

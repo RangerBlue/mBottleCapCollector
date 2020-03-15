@@ -3,8 +3,11 @@ package com.km.mbottlecapcollector;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -32,9 +35,13 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -43,14 +50,14 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraActivity";
     private Button takePictureButton;
-    private TextureView textureView;
-    private RelativeLayout overlay;
+    private AdjustedTextureView textureView;
     private RelativeLayout rootLayout;
     private SquareOverlay screenSquare;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -72,13 +79,26 @@ public class CameraActivity extends AppCompatActivity {
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
-    private int deviceWidth ;
+    private int deviceWidth;
+    private int cameraPreviewWidth;
+    /**
+     * Fixed values to ensure that preview don't have too high resolution which may cause
+     * slow performance
+     */
+    private int FULL_HD_WIDTH = 1920;
+    private int FULL_HD_HEIGHT = 1080;
+    private double cameraImageRatio =1;
+    /**
+     * It is actually width of image as image dimensions are stored as landscape, application
+     * focuses on portrait mode
+     */
+    private int highestImageWidth ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        textureView = (TextureView) findViewById(R.id.texture);
+        textureView = (AdjustedTextureView) findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
@@ -86,17 +106,17 @@ public class CameraActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         deviceWidth = displayMetrics.widthPixels;
-        overlay = (RelativeLayout) findViewById(R.id.overlay);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         screenSquare = new SquareOverlay(getApplicationContext(), deviceWidth);
         rootLayout.addView(screenSquare);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 takePicture();
             }
         });
-
+        cameraPreviewWidth = textureView.getWidth();
     }
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -104,7 +124,6 @@ public class CameraActivity extends AppCompatActivity {
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             //open your camera here
             openCamera();
-            setOverlay();
         }
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -188,6 +207,7 @@ public class CameraActivity extends AppCompatActivity {
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
+            cameraImageRatio = highestImageWidth/cameraPreviewWidth;
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -197,7 +217,16 @@ public class CameraActivity extends AppCompatActivity {
                         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
-                        save(bytes);
+                        Bitmap originalBitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,null);
+                        Bitmap squareBitmap = Bitmap.createBitmap(originalBitmap,
+                                (int)(cameraImageRatio*deviceWidth*(1-screenSquare.getRatio())/2),
+                                (int)(cameraImageRatio*deviceWidth*(1-screenSquare.getRatio())/2),
+                                (int)((deviceWidth*screenSquare.getRatio()*cameraImageRatio)),
+                                (int)((deviceWidth*screenSquare.getRatio()*cameraImageRatio)));
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] outputArray = stream.toByteArray();
+                        save(outputArray);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -264,6 +293,7 @@ public class CameraActivity extends AppCompatActivity {
                     // When the session is ready, we start displaying the preview.
                     cameraCaptureSessions = cameraCaptureSession;
                     updatePreview();
+                    cameraPreviewWidth = textureView.getWidth();
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
@@ -284,7 +314,12 @@ public class CameraActivity extends AppCompatActivity {
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
             Log.e(TAG, "device width " + deviceWidth);
-            imageDimension = Arrays.stream(map.getOutputSizes(SurfaceTexture.class)).filter(s->s.getWidth() < deviceWidth).findFirst().get();
+            highestImageWidth = Arrays.stream(map.getOutputSizes(SurfaceTexture.class))
+                    .map(Size::getHeight).sorted(Comparator.reverseOrder()).findFirst().get();
+            Log.e(TAG, "highest Width " + highestImageWidth);
+            imageDimension = Arrays.stream(map.getOutputSizes(SurfaceTexture.class))
+                    .filter(s->s.getWidth() == FULL_HD_WIDTH && s.getHeight() == FULL_HD_HEIGHT)
+                    .findFirst().get();
             Log.e(TAG, "camera dimension " + imageDimension);
             // Add permission for camera and let user grant the permission
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -346,16 +381,5 @@ public class CameraActivity extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
-    }
-
-    private void setOverlay(){
-        int previewWidth = textureView.getMeasuredWidth(),
-                previewHeight = textureView.getMeasuredHeight();
-
-        // Set the height of the overlay so that it makes the preview a square
-        RelativeLayout.LayoutParams overlayParams = (RelativeLayout.LayoutParams) overlay.getLayoutParams();
-        Log.e(TAG, "Height of camera preview "+ previewHeight + "width of camera " + previewWidth);
-        overlayParams.height = previewHeight - previewWidth;
-        overlay.setLayoutParams(overlayParams);
     }
 }
