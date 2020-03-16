@@ -220,7 +220,7 @@ public class CameraActivity extends AppCompatActivity {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             final File fileSquare = new File(Environment.getExternalStorageDirectory()+"/BottleCap/"+ LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()+"square.jpg");
             final File fileCircle = new File(Environment.getExternalStorageDirectory()+"/BottleCap/"+ LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()+"circle.jpg");
-            cameraImageRatio = highestImageWidth/cameraPreviewWidth;
+            cameraImageRatio = highestImageWidth/ (double)cameraPreviewWidth;
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {

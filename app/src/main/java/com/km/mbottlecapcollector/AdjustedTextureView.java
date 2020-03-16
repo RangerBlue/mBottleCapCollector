@@ -8,8 +8,8 @@ public class AdjustedTextureView extends TextureView{
     /**
      * Value were set to ensure that presented preview is not stretched or compressed
      */
-    private int mRatioWidth = 6;
-    private int mRatioHeight = 11;
+    private int mRatioWidth = 12;
+    private int mRatioHeight = 21;
 
     public AdjustedTextureView(Context context) {
         this(context, null);
