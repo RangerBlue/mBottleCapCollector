@@ -18,7 +18,6 @@
         android:layout_below="@+id/logo_id"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="95dp"
-        android:text="BOOTLE CAP COLLECTOR"
-        android:textSize="30dp" />
-
+        android:text="@string/app_name_logo"
+        android:textSize="30sp" />
 </RelativeLayout>

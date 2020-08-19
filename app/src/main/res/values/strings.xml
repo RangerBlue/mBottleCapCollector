@@ -2,4 +2,7 @@
     <string name="app_name">mBottleCapCollector</string>
     <string name="go_to_camera">Go to camera</string>
     <string name="take_picture">Take picture</string>
+    <string name="app_name_logo">BOTTLE CAP COLLECTOR</string>
+    <string name="check">CHECK</string>
+    <string name="view">VIEW</string>
 </resources>

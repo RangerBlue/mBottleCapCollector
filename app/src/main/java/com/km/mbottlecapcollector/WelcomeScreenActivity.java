@@ -15,7 +15,7 @@ public class WelcomeScreenActivity extends Activity {
 
         handler = new Handler();
         handler.postDelayed(() -> {
-            Intent intent = new Intent(WelcomeScreenActivity.this, MainActivity.class);
+            Intent intent = new Intent(WelcomeScreenActivity.this, MenuActivity.class);
             startActivity(intent);
             finish();
         }, delayInSeconds * 1000);
