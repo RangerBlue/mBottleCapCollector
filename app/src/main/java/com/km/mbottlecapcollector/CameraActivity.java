@@ -91,6 +91,7 @@ public class CameraActivity extends AppCompatActivity {
     private HandlerThread mBackgroundThread;
     private int deviceWidth;
     private int cameraPreviewWidth;
+    private String capturedImageURI;
     /**
      * Fixed values to ensure that preview don't have too high resolution which may cause
      * slow performance
@@ -245,6 +246,7 @@ public class CameraActivity extends AppCompatActivity {
                         circleBitmap.compress(Bitmap.CompressFormat.PNG, 100, streamCircle);
                         byte[] outputArrayCircle = streamCircle.toByteArray();
                         save(outputArrayCircle, fileCircle);
+                        capturedImageURI = fileCircle.getPath();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -274,7 +276,8 @@ public class CameraActivity extends AppCompatActivity {
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
                     Toast.makeText(CameraActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
-                    createCameraPreview();
+                    //createCameraPreview();
+                    goToChoiceActivity();
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
@@ -415,5 +418,12 @@ public class CameraActivity extends AppCompatActivity {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         return output;
+    }
+
+    private void goToChoiceActivity() {
+        Intent intent = new Intent(this, ChoiceActivity.class);
+        intent.putExtra("URI", capturedImageURI);
+        System.out.println("URI " + capturedImageURI);
+        startActivity(intent);
     }
 }

@@ -5,4 +5,7 @@
     <string name="app_name_logo">BOTTLE CAP COLLECTOR</string>
     <string name="check">CHECK</string>
     <string name="view">VIEW</string>
+    <string name="does_picture_look_fine">DOES PICTURE LOOK FINE?</string>
+    <string name="yes">YES</string>
+    <string name="retry">RETRY</string>
 </resources>
