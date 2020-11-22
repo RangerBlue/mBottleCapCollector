@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -32,6 +31,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void goToGalleryActivity() {
-        Toast.makeText(getApplicationContext(), "Activity view", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, GalleryActivity.class);
+        startActivity(intent);
     }
 }
