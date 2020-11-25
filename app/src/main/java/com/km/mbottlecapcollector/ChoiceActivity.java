@@ -72,6 +72,9 @@ public class ChoiceActivity extends AppCompatActivity {
         intent.putExtra("cap3", response.getSimilarCapsURLss().get(3));
         intent.putExtra("cap4", response.getSimilarCapsURLss().get(4));
         intent.putExtra("cap5", response.getSimilarCapsURLss().get(5));
+        intent.putExtra("cap6", response.getSimilarCapsURLss().get(6));
+        intent.putExtra("cap7", response.getSimilarCapsURLss().get(7));
+        intent.putExtra("cap8", response.getSimilarCapsURLss().get(8));
         intent.putExtra("duplicate", response.isDuplicate());
         startActivity(intent);
     }

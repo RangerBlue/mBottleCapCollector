@@ -18,33 +18,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-    </TableRow>
-
-    <TableRow android:layout_weight="1">
-
         <ImageView
             android:id="@+id/similarCap2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
+    </TableRow>
+
+    <TableRow android:layout_weight="1">
 
         <ImageView
             android:id="@+id/similarCap3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-    </TableRow>
-
-    <TableRow android:layout_weight="1">
 
         <ImageView
             android:id="@+id/similarCap4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-
         <ImageView
             android:id="@+id/similarCap5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+
+    <TableRow android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/similarCap6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/similarCap7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <ImageView
+            android:id="@+id/similarCap8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
