@@ -237,15 +237,11 @@ public class CameraActivity extends AppCompatActivity {
                         Bitmap circleBitmap = getCircledBitmap(squareBitmap);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] outputArraySquare = stream.toByteArray();
-                        save(outputArraySquare, fileSquare);
                         ByteArrayOutputStream streamCircle = new ByteArrayOutputStream();
                         circleBitmap.compress(Bitmap.CompressFormat.PNG, 100, streamCircle);
                         byte[] outputArrayCircle = streamCircle.toByteArray();
                         save(outputArrayCircle, fileCircle);
                         capturedImageURI = fileCircle.getPath();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {

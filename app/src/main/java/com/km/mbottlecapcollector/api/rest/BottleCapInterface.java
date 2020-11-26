@@ -1,8 +1,9 @@
 package com.km.mbottlecapcollector.api.rest;
 
 import com.km.mbottlecapcollector.api.model.Cap;
-import com.km.mbottlecapcollector.api.model.Caps;
 import com.km.mbottlecapcollector.api.model.ValidateCapResponse;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.MultipartBody;
@@ -16,7 +17,7 @@ import retrofit2.http.Path;
 
 public interface BottleCapInterface {
     @GET("/caps")
-    Call<Caps> caps();
+    Call<List<Cap>> caps();
 
     @GET("/caps/{id}")
     Observable<Cap> cap(@Path("id") long id);

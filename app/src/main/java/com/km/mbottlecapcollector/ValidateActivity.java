@@ -3,14 +3,7 @@ package com.km.mbottlecapcollector;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
-
-import com.km.mbottlecapcollector.api.model.Cap;
-import com.km.mbottlecapcollector.api.rest.API;
 import com.squareup.picasso.Picasso;
-
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.functions.Function4;
 
 public class ValidateActivity extends AppCompatActivity {
 

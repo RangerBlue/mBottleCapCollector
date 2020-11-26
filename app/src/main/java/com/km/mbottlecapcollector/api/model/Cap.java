@@ -1,10 +1,11 @@
 package com.km.mbottlecapcollector.api.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
-public class Cap {
+public class Cap implements Parcelable {
     @SerializedName("id")
     private int id;
 
@@ -20,6 +21,8 @@ public class Cap {
     @SerializedName("creationDate")
     private String creationDate;
 
+    private final int pixels = 200;
+
     public Cap(int id, String fileLocation, String googleDriveID, String capName, String creationDate) {
         this.id = id;
         this.fileLocation = fileLocation;
@@ -27,6 +30,26 @@ public class Cap {
         this.capName = capName;
         this.creationDate = creationDate;
     }
+
+    protected Cap(Parcel in) {
+        id = in.readInt();
+        fileLocation = in.readString();
+        googleDriveID = in.readString();
+        capName = in.readString();
+        creationDate = in.readString();
+    }
+
+    public static final Creator<Cap> CREATOR = new Creator<Cap>() {
+        @Override
+        public Cap createFromParcel(Parcel in) {
+            return new Cap(in);
+        }
+
+        @Override
+        public Cap[] newArray(int size) {
+            return new Cap[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -37,7 +60,7 @@ public class Cap {
     }
 
     public String getFileLocation() {
-        return fileLocation;
+        return fileLocation + "=w" + pixels;
     }
 
     public void setFileLocation(String fileLocation) {
@@ -66,5 +89,19 @@ public class Cap {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(fileLocation);
+        parcel.writeString(googleDriveID);
+        parcel.writeString(capName);
+        parcel.writeString(creationDate);
     }
 }

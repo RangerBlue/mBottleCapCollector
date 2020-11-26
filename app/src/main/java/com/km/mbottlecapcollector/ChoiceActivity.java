@@ -31,10 +31,10 @@ public class ChoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
 
-        retryButton = (Button) findViewById(R.id.buttonRetry);
+        retryButton = findViewById(R.id.buttonRetry);
         retryButton.setOnClickListener(view -> Toast.makeText(getApplicationContext(), "Retry button", Toast.LENGTH_SHORT).show());
 
-        yesButton = (Button) findViewById(R.id.buttonYes);
+        yesButton = findViewById(R.id.buttonYes);
         yesButton.setOnClickListener(view -> {
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), image);
             MultipartBody.Part body =

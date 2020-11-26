@@ -19,4 +19,12 @@
         android:layout_marginTop="200dp"
         android:background="@color/colorMainLayout"
         android:text="@string/view" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:indeterminateDrawable="@drawable/progress_bar"/>
 </RelativeLayout>
