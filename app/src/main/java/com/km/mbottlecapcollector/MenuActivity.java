@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.km.mbottlecapcollector.api.model.Cap;
+import com.km.mbottlecapcollector.api.model.PictureWrapper;
 import com.km.mbottlecapcollector.api.rest.API;
 
 import java.util.ArrayList;
@@ -37,18 +38,19 @@ public class MenuActivity extends AppCompatActivity {
 
         viewButton = findViewById(R.id.viewButton);
         viewButton.setOnClickListener(view -> {
+            Toast.makeText(getApplicationContext(), "Performing call... ", Toast.LENGTH_SHORT).show();
             spinner.setVisibility(View.VISIBLE);
             checkButton.setVisibility(View.INVISIBLE);
             viewButton.setVisibility(View.INVISIBLE);
-            API.bottleCaps().caps().enqueue(new Callback<List<Cap>>() {
+            API.bottleCaps().links().enqueue(new Callback<List<PictureWrapper>>() {
                 @Override
-                public void onResponse(Call<List<Cap>> call, Response<List<Cap>> response) {
+                public void onResponse(Call<List<PictureWrapper>> call, Response<List<PictureWrapper>> response) {
                     spinner.setVisibility(View.GONE);
                     goToGalleryActivity(response);
                 }
 
                 @Override
-                public void onFailure(Call<List<Cap>> call, Throwable t) {
+                public void onFailure(Call<List<PictureWrapper>> call, Throwable t) {
 
                 }
             });
@@ -67,7 +69,8 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToGalleryActivity(Response<List<Cap>> response) {
+    private void goToGalleryActivity(Response<List<PictureWrapper>> response) {
+        Toast.makeText(getApplicationContext(), "Opening gallery... ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, GalleryActivity.class);
         intent.putParcelableArrayListExtra("caps", (ArrayList<? extends Parcelable>) response.body());
         startActivity(intent);

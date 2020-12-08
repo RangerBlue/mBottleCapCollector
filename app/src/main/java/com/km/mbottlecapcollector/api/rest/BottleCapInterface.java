@@ -1,6 +1,7 @@
 package com.km.mbottlecapcollector.api.rest;
 
 import com.km.mbottlecapcollector.api.model.Cap;
+import com.km.mbottlecapcollector.api.model.PictureWrapper;
 import com.km.mbottlecapcollector.api.model.ValidateCapResponse;
 
 import java.util.List;
@@ -18,6 +19,9 @@ import retrofit2.http.Path;
 public interface BottleCapInterface {
     @GET("/caps")
     Call<List<Cap>> caps();
+
+    @GET("/links")
+    Call<List<PictureWrapper>> links();
 
     @GET("/caps/{id}")
     Observable<Cap> cap(@Path("id") long id);

@@ -21,8 +21,6 @@ public class Cap implements Parcelable {
     @SerializedName("creationDate")
     private String creationDate;
 
-    private final int pixels = 200;
-
     public Cap(int id, String fileLocation, String googleDriveID, String capName, String creationDate) {
         this.id = id;
         this.fileLocation = fileLocation;
@@ -60,7 +58,7 @@ public class Cap implements Parcelable {
     }
 
     public String getFileLocation() {
-        return fileLocation + "=w" + pixels;
+        return fileLocation;
     }
 
     public void setFileLocation(String fileLocation) {
