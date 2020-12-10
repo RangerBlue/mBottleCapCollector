@@ -1,8 +1,8 @@
 package com.km.mbottlecapcollector;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,7 +19,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ChoiceActivity extends AppCompatActivity {
+public class ChoiceActivity extends Activity {
     private ImageView imageView;
     private String imageURI;
     private Button retryButton;

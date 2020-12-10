@@ -61,6 +61,13 @@ public class Cap implements Parcelable {
         return fileLocation;
     }
 
+    public String getFileLocation(int pixels) {
+        if (pixels <= 0) {
+            return fileLocation;
+        }
+        return fileLocation + "=w" + pixels;
+    }
+
     public void setFileLocation(String fileLocation) {
         this.fileLocation = fileLocation;
     }

@@ -7,7 +7,8 @@ import android.os.Handler;
 
 public class WelcomeScreenActivity extends Activity {
     private Handler handler;
-    private int delayInSeconds = 3;
+    private int delayInSeconds = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

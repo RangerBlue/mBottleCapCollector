@@ -1,8 +1,8 @@
 package com.km.mbottlecapcollector;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends Activity {
 
     private Button checkButton;
     private Button viewButton;

@@ -1,11 +1,12 @@
 package com.km.mbottlecapcollector;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ImageView;
+
 import com.squareup.picasso.Picasso;
 
-public class ValidateActivity extends AppCompatActivity {
+public class ValidateActivity extends Activity {
 
     private ImageView validateCapImage0;
     private ImageView validateCapImage1;
@@ -36,7 +37,7 @@ public class ValidateActivity extends AppCompatActivity {
         initializePictures();
     }
 
-    private void initializeCapsURLs(){
+    private void initializeCapsURLs() {
         capURLs[0] = getIntent().getStringExtra("cap0");
         capURLs[1] = getIntent().getStringExtra("cap1");
         capURLs[2] = getIntent().getStringExtra("cap2");

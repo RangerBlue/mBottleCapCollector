@@ -6,7 +6,6 @@ import com.km.mbottlecapcollector.api.model.ValidateCapResponse;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -24,7 +23,7 @@ public interface BottleCapInterface {
     Call<List<PictureWrapper>> links();
 
     @GET("/caps/{id}")
-    Observable<Cap> cap(@Path("id") long id);
+    Call<Cap> cap(@Path("id") long id);
 
     @Multipart
     @POST("/validateCap")

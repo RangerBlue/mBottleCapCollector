@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context=".CapActivity">
+
+    <TableRow android:layout_weight="4"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/capPicture"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"
+            />
+    </TableRow>
+    <TableRow android:layout_weight="1"
+        android:background="@color/colorMainLayout">
+
+        <TextView
+            android:id="@+id/textViewCapName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow android:layout_weight="1"
+        android:background="@color/colorMainLayout">
+
+        <TextView
+            android:id="@+id/textViewGoogleDriveName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow android:layout_weight="1"
+        android:background="@color/colorMainLayout">
+
+        <TextView
+            android:id="@+id/textViewCreationDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </TableRow>
+</TableLayout>
