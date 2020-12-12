@@ -14,6 +14,9 @@ public class ValidateCapResponse {
     @SerializedName("similarCapsURLs")
     ArrayList<String> similarCapsURLss;
 
+    @SerializedName("similarityDistribution")
+    int[] similarityDistribution;
+
     public boolean isDuplicate() {
         return isDuplicate;
     }
@@ -34,4 +37,9 @@ public class ValidateCapResponse {
     public ArrayList<String> getSimilarCapsURLss() {
         return similarCapsURLss;
     }
+
+    public int[] getSimilarityDistribution() {
+        return similarityDistribution;
+    }
+
 }

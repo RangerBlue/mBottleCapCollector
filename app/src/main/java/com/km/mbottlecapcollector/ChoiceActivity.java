@@ -32,7 +32,10 @@ public class ChoiceActivity extends Activity {
         setContentView(R.layout.activity_choice);
 
         retryButton = findViewById(R.id.buttonRetry);
-        retryButton.setOnClickListener(view -> Toast.makeText(getApplicationContext(), "Retry button", Toast.LENGTH_SHORT).show());
+        retryButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, CameraActivity.class);
+            startActivity(intent);
+        });
 
         yesButton = findViewById(R.id.buttonYes);
         yesButton.setOnClickListener(view -> {
@@ -76,6 +79,8 @@ public class ChoiceActivity extends Activity {
         intent.putExtra("cap7", response.getSimilarCapsURLss().get(7));
         intent.putExtra("cap8", response.getSimilarCapsURLss().get(8));
         intent.putExtra("duplicate", response.isDuplicate());
+        intent.putExtra("uri", imageURI);
+        intent.putExtra("distribution", response.getSimilarityDistribution());
         startActivity(intent);
     }
 }

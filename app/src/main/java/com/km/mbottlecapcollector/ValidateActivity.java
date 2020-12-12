@@ -1,8 +1,13 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -18,6 +23,22 @@ public class ValidateActivity extends Activity {
     private ImageView validateCapImage7;
     private ImageView validateCapImage8;
     String[] capURLs = new String[9];
+    private ImageView capturedImage;
+    private String imageURI;
+    private TextView textViewValue0_10;
+    private TextView textViewValue10_20;
+    private TextView textViewValue20_30;
+    private TextView textViewValue30_40;
+    private TextView textViewValue40_50;
+    private TextView textViewValue50_60;
+    private TextView textViewValue60_70;
+    private TextView textViewValue70_80;
+    private TextView textViewValue80_90;
+    private TextView textViewValue90_100;
+
+    private Button yesButton;
+    private Button noButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +54,57 @@ public class ValidateActivity extends Activity {
         validateCapImage7 = findViewById(R.id.similarCap7);
         validateCapImage8 = findViewById(R.id.similarCap8);
 
-        initializeCapsURLs();
+        capturedImage = findViewById(R.id.capturedPicture);
+
+        textViewValue0_10 = findViewById(R.id.textViewValue0_10);
+        textViewValue10_20 = findViewById(R.id.textViewValue10_20);
+        textViewValue20_30 = findViewById(R.id.textViewValue20_30);
+        textViewValue30_40 = findViewById(R.id.textViewValue30_40);
+        textViewValue40_50 = findViewById(R.id.textViewValue40_50);
+        textViewValue50_60 = findViewById(R.id.textViewValue50_60);
+        textViewValue60_70 = findViewById(R.id.textViewValue60_70);
+        textViewValue70_80 = findViewById(R.id.textViewValue70_80);
+        textViewValue80_90 = findViewById(R.id.textViewValue80_90);
+        textViewValue90_100 = findViewById(R.id.textViewValue90_100);
+
+        initializeData();
         initializePictures();
+
+        yesButton = findViewById(R.id.buttonYesSave);
+        yesButton.setOnClickListener(view -> {
+            Toast.makeText(getApplicationContext(), "Yes button ", Toast.LENGTH_SHORT).show();
+        });
+
+        noButton = findViewById(R.id.buttonNoSave);
+        noButton.setOnClickListener(view -> {
+            Toast.makeText(getApplicationContext(), "No button", Toast.LENGTH_SHORT).show();
+        });
     }
 
-    private void initializeCapsURLs() {
-        capURLs[0] = getIntent().getStringExtra("cap0");
-        capURLs[1] = getIntent().getStringExtra("cap1");
-        capURLs[2] = getIntent().getStringExtra("cap2");
-        capURLs[3] = getIntent().getStringExtra("cap3");
-        capURLs[4] = getIntent().getStringExtra("cap4");
-        capURLs[5] = getIntent().getStringExtra("cap5");
-        capURLs[6] = getIntent().getStringExtra("cap6");
-        capURLs[7] = getIntent().getStringExtra("cap7");
-        capURLs[8] = getIntent().getStringExtra("cap8");
+    private void initializeData() {
+        Intent intent = getIntent();
+        capURLs[0] = intent.getStringExtra("cap0");
+        capURLs[1] = intent.getStringExtra("cap1");
+        capURLs[2] = intent.getStringExtra("cap2");
+        capURLs[3] = intent.getStringExtra("cap3");
+        capURLs[4] = intent.getStringExtra("cap4");
+        capURLs[5] = intent.getStringExtra("cap5");
+        capURLs[6] = intent.getStringExtra("cap6");
+        capURLs[7] = intent.getStringExtra("cap7");
+        capURLs[8] = intent.getStringExtra("cap8");
+
+        imageURI = intent.getStringExtra("uri");
+        int[] distribution = intent.getIntArrayExtra("distribution");
+        textViewValue0_10.setText(String.valueOf(distribution[0]));
+        textViewValue10_20.setText(String.valueOf(distribution[1]));
+        textViewValue20_30.setText(String.valueOf(distribution[2]));
+        textViewValue30_40.setText(String.valueOf(distribution[3]));
+        textViewValue40_50.setText(String.valueOf(distribution[4]));
+        textViewValue50_60.setText(String.valueOf(distribution[5]));
+        textViewValue60_70.setText(String.valueOf(distribution[6]));
+        textViewValue70_80.setText(String.valueOf(distribution[7]));
+        textViewValue80_90.setText(String.valueOf(distribution[8]));
+        textViewValue90_100.setText(String.valueOf(distribution[9]));
 
     }
 
@@ -60,6 +118,8 @@ public class ValidateActivity extends Activity {
         Picasso.get().load(capURLs[6]).into(validateCapImage6);
         Picasso.get().load(capURLs[7]).into(validateCapImage7);
         Picasso.get().load(capURLs[8]).into(validateCapImage8);
+        capturedImage.setImageDrawable(Drawable.createFromPath(imageURI));
     }
+
 
 }

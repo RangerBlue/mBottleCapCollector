@@ -8,4 +8,17 @@
     <string name="does_picture_look_fine">DOES THE PICTURE LOOK FINE?</string>
     <string name="yes">YES</string>
     <string name="retry">RETRY</string>
+    <string name="do_you_want_to_save_it">DO YOU WANT TO SAVE IT?</string>
+    <string name="value_0_1">0-1</string>
+    <string name="value_1_2">1-2</string>
+    <string name="value_2_3">2-3</string>
+    <string name="value_3_4">3-4</string>
+    <string name="value_4_5">4-5</string>
+    <string name="value_5_6">5-6</string>
+    <string name="value_6_7">6-7</string>
+    <string name="value_7_8">7-8</string>
+    <string name="value_8_9">8-9</string>
+    <string name="value_9_10">9-10</string>
+    <string name="value_0">0</string>
+    <string name="is_it_one_of_these">IS IT ONE OF THESE?</string>
 </resources>
