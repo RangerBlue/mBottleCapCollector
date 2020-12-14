@@ -1,0 +1,117 @@
+package com.km.mbottlecapcollector;
+
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.km.mbottlecapcollector.api.model.Cap;
+import com.km.mbottlecapcollector.api.rest.API;
+import com.km.mbottlecapcollector.util.ScreenRatioHelper;
+
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class SaveActivity extends AppCompatActivity {
+    private ImageView imageViewCap;
+    private EditText editTextCapName;
+    private Button buttonSave;
+    private String imageURI;
+    private File image;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_save);
+        imageViewCap = findViewById(R.id.savedCapImage);
+        editTextCapName = findViewById(R.id.editTextCapName);
+        buttonSave = findViewById(R.id.buttonSaveCap);
+        buttonSave.setOnClickListener(view -> {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), image);
+            MultipartBody.Part body =
+                    MultipartBody.Part.createFormData("file", image.getName(), requestFile);
+            RequestBody name = RequestBody.create(MediaType.parse("text/plain"),
+                    image.getName());
+            API.bottleCaps().addCap(name, body).enqueue(new Callback<Long>() {
+                @Override
+                public void onResponse(Call<Long> call, Response<Long> response) {
+                    if(response.code() == 201){
+                        goToCapActivity(response.body().longValue());
+                    }else if(response.code() == 401){
+                        Toast.makeText(getApplicationContext(), "You are not allowed to perform" +
+                                "this action "+response, Toast.LENGTH_SHORT).show();
+                    } else{
+                        Toast.makeText(getApplicationContext(), "Try again.. "+response,
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<Long> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Failure! " + t.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        });
+        buttonSave.setEnabled(false);
+
+        imageURI = getIntent().getStringExtra("uri");
+        image = new File(imageURI);
+        imageViewCap.setImageDrawable(Drawable.createFromPath(imageURI));
+
+        editTextCapName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.toString().trim().length() == 0){
+                    buttonSave.setEnabled(false);
+                } else {
+                    buttonSave.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
+    private void goToCapActivity(long id) {
+        API.bottleCaps().cap(id).enqueue(new Callback<Cap>() {
+            @Override
+            public void onResponse(Call<Cap> call, Response<Cap> response) {
+                Cap cap = response.body();
+                Intent intent = new Intent(getApplicationContext(), CapActivity.class);
+                intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
+                intent.putExtra("capName", cap.getCapName());
+                intent.putExtra("googleDriveName", cap.getGoogleDriveID());
+                intent.putExtra("creationDate", cap.getCreationDate());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<Cap> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}

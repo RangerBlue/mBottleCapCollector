@@ -23,6 +23,7 @@ public class MenuActivity extends Activity {
 
     private Button checkButton;
     private Button viewButton;
+    private Button adminButton;
     private ProgressBar spinner;
 
     @Override
@@ -42,11 +43,20 @@ public class MenuActivity extends Activity {
             spinner.setVisibility(View.VISIBLE);
             checkButton.setVisibility(View.INVISIBLE);
             viewButton.setVisibility(View.INVISIBLE);
+            adminButton.setVisibility(View.INVISIBLE);
             API.bottleCaps().links().enqueue(new Callback<List<PictureWrapper>>() {
                 @Override
                 public void onResponse(Call<List<PictureWrapper>> call, Response<List<PictureWrapper>> response) {
-                    spinner.setVisibility(View.GONE);
-                    goToGalleryActivity(response);
+                    if(response.code() == 401){
+                        Toast.makeText(getApplicationContext(), "You are not allowed to perform" +
+                                "this action ", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+                        spinner.setVisibility(View.GONE);
+                        goToGalleryActivity(response);
+                    }
+
                 }
 
                 @Override
@@ -55,6 +65,11 @@ public class MenuActivity extends Activity {
                 }
             });
         });
+
+        adminButton = findViewById(R.id.adminButton);
+        adminButton.setOnClickListener(view -> {
+            goToLoginActivity();
+        });
     }
 
     @Override
@@ -62,6 +77,7 @@ public class MenuActivity extends Activity {
         super.onResume();
         checkButton.setVisibility(View.VISIBLE);
         viewButton.setVisibility(View.VISIBLE);
+        adminButton.setVisibility(View.VISIBLE);
     }
 
     private void goToCameraActivity() {
@@ -73,6 +89,11 @@ public class MenuActivity extends Activity {
         Toast.makeText(getApplicationContext(), "Opening gallery... ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, GalleryActivity.class);
         intent.putParcelableArrayListExtra("caps", (ArrayList<? extends Parcelable>) response.body());
+        startActivity(intent);
+    }
+
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }

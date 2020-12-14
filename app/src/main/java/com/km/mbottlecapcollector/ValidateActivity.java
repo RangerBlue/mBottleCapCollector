@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -72,12 +71,12 @@ public class ValidateActivity extends Activity {
 
         yesButton = findViewById(R.id.buttonYesSave);
         yesButton.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "Yes button ", Toast.LENGTH_SHORT).show();
+            goToSaveActivity();
         });
 
         noButton = findViewById(R.id.buttonNoSave);
         noButton.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "No button", Toast.LENGTH_SHORT).show();
+            goToMenuActivity();
         });
     }
 
@@ -105,7 +104,6 @@ public class ValidateActivity extends Activity {
         textViewValue70_80.setText(String.valueOf(distribution[7]));
         textViewValue80_90.setText(String.valueOf(distribution[8]));
         textViewValue90_100.setText(String.valueOf(distribution[9]));
-
     }
 
     private void initializePictures() {
@@ -121,5 +119,15 @@ public class ValidateActivity extends Activity {
         capturedImage.setImageDrawable(Drawable.createFromPath(imageURI));
     }
 
+    private void goToSaveActivity() {
+        Intent intent = new Intent(this, SaveActivity.class);
+        intent.putExtra("uri", imageURI);
+        startActivity(intent);
+    }
+
+    private void goToMenuActivity() {
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
+    }
 
 }

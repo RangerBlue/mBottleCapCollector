@@ -20,11 +20,19 @@
         android:background="@color/colorMainLayout"
         android:text="@string/view" />
 
+    <Button
+        android:id="@+id/adminButton"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="400dp"
+        android:background="@color/colorMainLayout"
+        android:text="@string/login" />
+
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:indeterminateDrawable="@drawable/progress_bar"/>
+        android:indeterminateDrawable="@drawable/progress_bar" />
 </RelativeLayout>

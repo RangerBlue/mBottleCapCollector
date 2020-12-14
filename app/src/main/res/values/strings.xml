@@ -21,4 +21,14 @@
     <string name="value_9_10">9-10</string>
     <string name="value_0">0</string>
     <string name="is_it_one_of_these">IS IT ONE OF THESE?</string>
+    <string name="name">NAME:</string>
+    <string name="type_name_here">Type name here...</string>
+    <string name="save">SAVE</string>
+    <string name="username">USERNAME</string>
+    <string name="type_username_here">Type username here...</string>
+    <string name="password">PASSWORD</string>
+    <string name="type_password_here">Type password here...</string>
+    <string name="login">LOGIN</string>
+    <string name="logout">LOGOUT</string>
+    <string name="logged">LOGGED</string>
 </resources>

@@ -8,6 +8,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -19,11 +20,19 @@ public interface BottleCapInterface {
     @GET("/caps")
     Call<List<Cap>> caps();
 
+    @Multipart
+    @POST("/caps/")
+    Call<Long> addCap(@Part("name") RequestBody name, @Part MultipartBody.Part image);
+
     @GET("/links")
     Call<List<PictureWrapper>> links();
 
     @GET("/caps/{id}")
     Call<Cap> cap(@Path("id") long id);
+
+    @GET("/management/info")
+    Call<ResponseBody> info();
+
 
     @Multipart
     @POST("/validateCap")
