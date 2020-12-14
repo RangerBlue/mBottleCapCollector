@@ -10,8 +10,10 @@ import android.widget.Toast;
 
 import com.km.mbottlecapcollector.api.model.ValidateCapResponse;
 import com.km.mbottlecapcollector.api.rest.API;
+import com.km.mbottlecapcollector.util.ScreenRatioHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -69,15 +71,17 @@ public class ChoiceActivity extends Activity {
 
     private void goToValidateActivity(ValidateCapResponse response) {
         Intent intent = new Intent(this, ValidateActivity.class);
-        intent.putExtra("cap0", response.getSimilarCapsURLss().get(0));
-        intent.putExtra("cap1", response.getSimilarCapsURLss().get(1));
-        intent.putExtra("cap2", response.getSimilarCapsURLss().get(2));
-        intent.putExtra("cap3", response.getSimilarCapsURLss().get(3));
-        intent.putExtra("cap4", response.getSimilarCapsURLss().get(4));
-        intent.putExtra("cap5", response.getSimilarCapsURLss().get(5));
-        intent.putExtra("cap6", response.getSimilarCapsURLss().get(6));
-        intent.putExtra("cap7", response.getSimilarCapsURLss().get(7));
-        intent.putExtra("cap8", response.getSimilarCapsURLss().get(8));
+        ArrayList<String> urls = response.getSimilarCapsURLss();
+        int pixels = ScreenRatioHelper.getValidateCapWidth();
+        intent.putExtra("cap0", ValidateCapResponse.getLinkWithPixels(urls.get(0), pixels));
+        intent.putExtra("cap1", ValidateCapResponse.getLinkWithPixels(urls.get(1),pixels));
+        intent.putExtra("cap2", ValidateCapResponse.getLinkWithPixels(urls.get(2), pixels));
+        intent.putExtra("cap3", ValidateCapResponse.getLinkWithPixels(urls.get(3),pixels));
+        intent.putExtra("cap4", ValidateCapResponse.getLinkWithPixels(urls.get(4),pixels));
+        intent.putExtra("cap5", ValidateCapResponse.getLinkWithPixels(urls.get(5),pixels));
+        intent.putExtra("cap6", ValidateCapResponse.getLinkWithPixels(urls.get(6),pixels));
+        intent.putExtra("cap7", ValidateCapResponse.getLinkWithPixels(urls.get(7),pixels));
+        intent.putExtra("cap8", ValidateCapResponse.getLinkWithPixels(urls.get(8),pixels));
         intent.putExtra("duplicate", response.isDuplicate());
         intent.putExtra("uri", imageURI);
         intent.putExtra("distribution", response.getSimilarityDistribution());

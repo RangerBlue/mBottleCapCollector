@@ -42,4 +42,8 @@ public class ValidateCapResponse {
         return similarityDistribution;
     }
 
+    public static String getLinkWithPixels(String url, int pixels){
+        return url + "=w" + pixels;
+    }
+
 }
