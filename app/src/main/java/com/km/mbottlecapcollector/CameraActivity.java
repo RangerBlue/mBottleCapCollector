@@ -35,8 +35,6 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -228,7 +226,7 @@ public class CameraActivity extends Activity {
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             final File fileSquare = new File(Environment.getExternalStorageDirectory() + "/BottleCap/" + LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() + "square.jpg");
-            final File fileCircle = new File(Environment.getExternalStorageDirectory() + "/BottleCap/" + LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() + "circle.jpg");
+            final File fileCircle = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES) , LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() + "circle.jpg");
             cameraImageRatio = highestImageWidth / (double) cameraPreviewWidth;
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
