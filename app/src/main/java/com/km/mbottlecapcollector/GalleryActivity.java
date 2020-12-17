@@ -1,8 +1,6 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +15,6 @@ public class GalleryActivity extends Activity {
 
     private ArrayList<PictureWrapper> capList = new ArrayList<>();
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,8 +1,8 @@
 package com.km.mbottlecapcollector;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,7 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class SaveActivity extends AppCompatActivity {
+public class SaveActivity extends Activity {
     private ImageView imageViewCap;
     private EditText editTextCapName;
     private Button buttonSave;

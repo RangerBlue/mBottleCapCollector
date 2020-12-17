@@ -1,7 +1,6 @@
 package com.km.mbottlecapcollector;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,13 +27,11 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.Size;
@@ -104,7 +101,6 @@ public class CameraActivity extends Activity {
     private CameraCharacteristics characteristics;
     private StreamConfigurationMap map;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,8 +116,6 @@ public class CameraActivity extends Activity {
         screenSquare = new SquareOverlay(getApplicationContext(), deviceWidth);
         rootLayout.addView(screenSquare);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.O)
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 takePicture();
@@ -131,7 +125,6 @@ public class CameraActivity extends Activity {
     }
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
-        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             //open your camera here
@@ -153,7 +146,6 @@ public class CameraActivity extends Activity {
         }
     };
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
-        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onOpened(CameraDevice camera) {
             Log.i(TAG, "Opening camera");
@@ -198,7 +190,6 @@ public class CameraActivity extends Activity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     protected void takePicture() {
         if (null == cameraDevice) {
             Log.i(TAG, "There is no camera available");
@@ -326,7 +317,6 @@ public class CameraActivity extends Activity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void openCamera() {
         manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         initializeCharacteristics();
@@ -381,7 +371,6 @@ public class CameraActivity extends Activity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onResume() {
         super.onResume();
@@ -431,7 +420,6 @@ public class CameraActivity extends Activity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private Size calculateImageResolution() {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         CameraCharacteristics characteristics = null;
@@ -456,7 +444,6 @@ public class CameraActivity extends Activity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private Size calculateCameraPreviewResolution() {
         return Arrays.stream(map.getOutputSizes(SurfaceTexture.class))
                 .filter(s -> s.getWidth() == FULL_HD_WIDTH && s.getHeight() == FULL_HD_HEIGHT)
