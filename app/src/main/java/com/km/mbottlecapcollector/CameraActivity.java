@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -57,8 +58,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+
+import static com.km.mbottlecapcollector.util.ScreenRatioHelper.FULL_HD_HEIGHT;
+import static com.km.mbottlecapcollector.util.ScreenRatioHelper.FULL_HD_WIDTH;
+import static com.km.mbottlecapcollector.util.ScreenRatioHelper.IMAGE_RATIO;
 
 public class CameraActivity extends Activity {
 
@@ -81,11 +85,10 @@ public class CameraActivity extends Activity {
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest captureRequest;
     protected CaptureRequest.Builder captureRequestBuilder;
-    private Size imageDimension;
+    private Size cameraPreviewResolution;
+    private Size imageResolution;
     private ImageReader imageReader;
-    private File file;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
-    private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
     private int deviceWidth;
@@ -95,15 +98,13 @@ public class CameraActivity extends Activity {
      * Fixed values to ensure that preview don't have too high resolution which may cause
      * slow performance
      */
-    private int FULL_HD_WIDTH = 1920;
-    private int FULL_HD_HEIGHT = 1080;
-    private double cameraImageRatio = 1;
-    /**
-     * It is actually width of image as image dimensions are stored as landscape, application
-     * focuses on portrait mode
-     */
-    private int highestImageWidth;
 
+    private double cameraImageRatio = 1;
+    private CameraManager manager;
+    private CameraCharacteristics characteristics;
+    private StreamConfigurationMap map;
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +115,7 @@ public class CameraActivity extends Activity {
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         assert takePictureButton != null;
         deviceWidth = ScreenRatioHelper.getScreenWidth();
+        Log.i(TAG, "Device Width: " + deviceWidth);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         screenSquare = new SquareOverlay(getApplicationContext(), deviceWidth);
         rootLayout.addView(screenSquare);
@@ -151,12 +153,13 @@ public class CameraActivity extends Activity {
         }
     };
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onOpened(CameraDevice camera) {
-            //This is called when the camera is open
-            Log.e(TAG, "onOpened");
+            Log.i(TAG, "Opening camera");
             cameraDevice = camera;
             createCameraPreview();
+            imageResolution = calculateImageResolution();
         }
 
         @Override
@@ -174,7 +177,6 @@ public class CameraActivity extends Activity {
         @Override
         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
-            Toast.makeText(CameraActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
             createCameraPreview();
         }
     };
@@ -199,23 +201,11 @@ public class CameraActivity extends Activity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     protected void takePicture() {
         if (null == cameraDevice) {
-            Log.e(TAG, "cameraDevice is null");
+            Log.i(TAG, "There is no camera available");
             return;
         }
-        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
-            Size[] jpegSizes = null;
-            if (characteristics != null) {
-                jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
-            }
-            int width = imageDimension.getWidth();
-            int height = imageDimension.getHeight();
-            if (jpegSizes != null && 0 < jpegSizes.length) {
-                width = jpegSizes[0].getWidth();
-                height = jpegSizes[0].getHeight();
-            }
-            ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+            ImageReader reader = ImageReader.newInstance(imageResolution.getWidth(), imageResolution.getHeight(), ImageFormat.JPEG, 1);
             List<Surface> outputSurfaces = new ArrayList<Surface>(2);
             outputSurfaces.add(reader.getSurface());
             outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
@@ -225,9 +215,8 @@ public class CameraActivity extends Activity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File fileSquare = new File(Environment.getExternalStorageDirectory() + "/BottleCap/" + LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() + "square.jpg");
-            final File fileCircle = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES) , LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() + "circle.jpg");
-            cameraImageRatio = highestImageWidth / (double) cameraPreviewWidth;
+            final File fileCircle = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() + "circle.jpg");
+            cameraImageRatio = imageResolution.getHeight() / (double) cameraPreviewWidth;
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -238,6 +227,12 @@ public class CameraActivity extends Activity {
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
                         Bitmap originalBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
+                        if (ScreenRatioHelper.isDeviceSMA50()) {
+                            Matrix matrix = new Matrix();
+                            matrix.postRotate(90);
+                            originalBitmap = Bitmap.createBitmap(originalBitmap, 0, 0,
+                                    originalBitmap.getWidth(), originalBitmap.getHeight(), matrix, true);
+                        }
                         Bitmap squareBitmap = Bitmap.createBitmap(originalBitmap,
                                 (int) (cameraImageRatio * deviceWidth * (1 - screenSquare.getRatio()) / 2),
                                 (int) (cameraImageRatio * deviceWidth * (1 - screenSquare.getRatio()) / 2),
@@ -278,8 +273,6 @@ public class CameraActivity extends Activity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CameraActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
-                    //createCameraPreview();
                     goToChoiceActivity();
                 }
             };
@@ -306,7 +299,7 @@ public class CameraActivity extends Activity {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
-            texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
+            texture.setDefaultBufferSize(cameraPreviewResolution.getWidth(), cameraPreviewResolution.getHeight());
             Surface surface = new Surface(texture);
             captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             captureRequestBuilder.addTarget(surface);
@@ -335,21 +328,12 @@ public class CameraActivity extends Activity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void openCamera() {
-        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-        Log.e(TAG, "is camera open");
+        manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        initializeCharacteristics();
+        cameraPreviewResolution = calculateCameraPreviewResolution();
+        Log.i(TAG, "Camera preview resolution " + cameraPreviewResolution);
+        Log.i(TAG, "Opening camera");
         try {
-            cameraId = manager.getCameraIdList()[0];
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-            StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            assert map != null;
-            Log.e(TAG, "device width " + deviceWidth);
-            highestImageWidth = Arrays.stream(map.getOutputSizes(SurfaceTexture.class))
-                    .map(Size::getHeight).sorted(Comparator.reverseOrder()).findFirst().get();
-            Log.e(TAG, "highest Width " + highestImageWidth);
-            imageDimension = Arrays.stream(map.getOutputSizes(SurfaceTexture.class))
-                    .filter(s -> s.getWidth() == FULL_HD_WIDTH && s.getHeight() == FULL_HD_HEIGHT)
-                    .findFirst().get();
-            Log.e(TAG, "camera dimension " + imageDimension);
             // Add permission for camera and let user grant the permission
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
@@ -359,12 +343,12 @@ public class CameraActivity extends Activity {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-        Log.e(TAG, "openCamera X");
+        Log.i(TAG, "Camera " + cameraId + " opened");
     }
 
     protected void updatePreview() {
         if (null == cameraDevice) {
-            Log.e(TAG, "updatePreview error, return");
+            Log.e(TAG, "Error in updating preview");
         }
         captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         try {
@@ -390,7 +374,8 @@ public class CameraActivity extends Activity {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 // close the app
-                Toast.makeText(CameraActivity.this, "Sorry!!!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
+                Toast.makeText(CameraActivity.this, "Sorry!!!, you can't use this app without granting permission",
+                        Toast.LENGTH_LONG).show();
                 finish();
             }
         }
@@ -400,7 +385,6 @@ public class CameraActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {
             openCamera();
@@ -411,8 +395,6 @@ public class CameraActivity extends Activity {
 
     @Override
     protected void onPause() {
-        Log.e(TAG, "onPause");
-        //closeCamera();
         stopBackgroundThread();
         super.onPause();
     }
@@ -435,7 +417,53 @@ public class CameraActivity extends Activity {
     private void goToChoiceActivity() {
         Intent intent = new Intent(this, ChoiceActivity.class);
         intent.putExtra("URI", capturedImageURI);
-        System.out.println("URI " + capturedImageURI);
+        Log.i(TAG, "Caputured image URI " + capturedImageURI);
         startActivity(intent);
+    }
+
+    private void initializeCharacteristics() {
+        try {
+            cameraId = manager.getCameraIdList()[0];
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+            map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private Size calculateImageResolution() {
+        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        CameraCharacteristics characteristics = null;
+        Log.i(TAG, "Image ratio " + IMAGE_RATIO);
+        try {
+            characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+        Size[] jpegSizes = null;
+        if (characteristics != null) {
+            jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
+        }
+        if (jpegSizes != null && 0 < jpegSizes.length) {
+            Size result = Arrays.stream(jpegSizes).filter(size -> (compareRatio(size, IMAGE_RATIO))).
+                    findFirst().orElse(jpegSizes[0]);
+            Log.i(TAG, "Adjusted image resolution " + result);
+            return result;
+        } else {
+            Log.i(TAG, "Adjusted image resolution " + cameraPreviewResolution);
+            return cameraPreviewResolution;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private Size calculateCameraPreviewResolution() {
+        return Arrays.stream(map.getOutputSizes(SurfaceTexture.class))
+                .filter(s -> s.getWidth() == FULL_HD_WIDTH && s.getHeight() == FULL_HD_HEIGHT)
+                .findFirst().orElse(new Size(FULL_HD_WIDTH, FULL_HD_HEIGHT));
+    }
+
+    private boolean compareRatio(Size size, double ratio) {
+        return ScreenRatioHelper.compareDouble((size.getWidth() / (double) size.getHeight()), (ratio));
     }
 }
