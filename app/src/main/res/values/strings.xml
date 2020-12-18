@@ -36,4 +36,8 @@
     <string name="right"><![CDATA[>]]></string>
     <string name="edit">EDIT</string>
     <string name="delete">DELETE</string>
+    <string name="confirm">Confirm</string>
+    <string name="do_you_really_want_to_delete_this_cap">Do you really want to delete this cap?</string>
+    <string name="no">NO</string>
+
 </resources>
