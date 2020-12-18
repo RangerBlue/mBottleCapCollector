@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Cap implements Parcelable {
     @SerializedName("id")
-    private int id;
+    private long id;
 
     @SerializedName("fileLocation")
     private String fileLocation;
@@ -21,7 +21,7 @@ public class Cap implements Parcelable {
     @SerializedName("creationDate")
     private String creationDate;
 
-    public Cap(int id, String fileLocation, String googleDriveID, String capName, String creationDate) {
+    public Cap(long id, String fileLocation, String googleDriveID, String capName, String creationDate) {
         this.id = id;
         this.fileLocation = fileLocation;
         this.googleDriveID = googleDriveID;
@@ -49,7 +49,7 @@ public class Cap implements Parcelable {
         }
     };
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -103,7 +103,7 @@ public class Cap implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
+        parcel.writeLong(id);
         parcel.writeString(fileLocation);
         parcel.writeString(googleDriveID);
         parcel.writeString(capName);

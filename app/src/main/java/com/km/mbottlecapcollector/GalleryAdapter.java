@@ -61,6 +61,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     public void onResponse(Call<Cap> call, Response<Cap> response) {
                         Cap cap = response.body();
                         Intent intent = new Intent(view.getContext().getApplicationContext(), CapActivity.class);
+                        intent.putExtra("id", cap.getId());
                         intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
                         intent.putExtra("capName", cap.getCapName());
                         intent.putExtra("googleDriveName", cap.getGoogleDriveID());

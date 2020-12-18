@@ -34,4 +34,6 @@
     <string name="slash">/</string>
     <string name="left"><![CDATA[<]]></string>
     <string name="right"><![CDATA[>]]></string>
+    <string name="edit">EDIT</string>
+    <string name="delete">DELETE</string>
 </resources>

@@ -10,6 +10,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -24,6 +25,9 @@ public interface BottleCapInterface {
     @POST("/caps/")
     Call<Long> addCap(@Part("name") RequestBody name, @Part MultipartBody.Part image);
 
+    @DELETE("/caps/{id}")
+    Call<ResponseBody> deleteCap(@Path("id") long id);
+
     @GET("/links")
     Call<List<PictureWrapper>> links();
 
@@ -32,7 +36,6 @@ public interface BottleCapInterface {
 
     @GET("/management/info")
     Call<ResponseBody> info();
-
 
     @Multipart
     @POST("/validateCap")

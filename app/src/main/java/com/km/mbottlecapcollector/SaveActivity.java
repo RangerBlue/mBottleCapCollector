@@ -44,7 +44,7 @@ public class SaveActivity extends Activity {
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("file", image.getName(), requestFile);
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"),
-                    image.getName());
+                    editTextCapName.getText().toString());
             API.bottleCaps().addCap(name, body).enqueue(new Callback<Long>() {
                 @Override
                 public void onResponse(Call<Long> call, Response<Long> response) {
@@ -101,6 +101,7 @@ public class SaveActivity extends Activity {
             public void onResponse(Call<Cap> call, Response<Cap> response) {
                 Cap cap = response.body();
                 Intent intent = new Intent(getApplicationContext(), CapActivity.class);
+                intent.putExtra("id", cap.getId());
                 intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
                 intent.putExtra("capName", cap.getCapName());
                 intent.putExtra("googleDriveName", cap.getGoogleDriveID());
