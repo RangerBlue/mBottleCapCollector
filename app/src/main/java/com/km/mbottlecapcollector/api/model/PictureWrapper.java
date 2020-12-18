@@ -43,9 +43,10 @@ public class PictureWrapper implements Parcelable {
         this.id = id;
     }
 
-    public String getUrl() {
+    public String getUrl(int pixels) {
         return url+ "=w" + pixels;
     }
+
 
     public void setUrl(String url) {
         this.url = url;

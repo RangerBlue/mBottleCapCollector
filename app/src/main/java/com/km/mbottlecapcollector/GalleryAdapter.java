@@ -39,7 +39,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PictureWrapper wrapper = galleryList.get(position);
-        Picasso.get().load(wrapper.getUrl()).into(holder.img);
+        Picasso.get().load(wrapper.getUrl(ScreenRatioHelper.getCapInRowWidth())).into(holder.img);
         holder.id = wrapper.getId();
     }
 
@@ -75,8 +75,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 });
             });
         }
-
-
     }
 
+    public ArrayList<PictureWrapper> getGalleryList() {
+        return galleryList;
+    }
+
+    public void setGalleryList(ArrayList<PictureWrapper> galleryList) {
+        this.galleryList = galleryList;
+    }
 }

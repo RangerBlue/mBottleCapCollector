@@ -31,4 +31,7 @@
     <string name="login">LOGIN</string>
     <string name="logout">LOGOUT</string>
     <string name="logged">LOGGED</string>
+    <string name="slash">/</string>
+    <string name="left"><![CDATA[<]]></string>
+    <string name="right"><![CDATA[>]]></string>
 </resources>
