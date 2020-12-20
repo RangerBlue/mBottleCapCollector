@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.km.mbottlecapcollector.api.model.Cap;
 import com.km.mbottlecapcollector.api.rest.API;
-import com.km.mbottlecapcollector.util.ScreenRatioHelper;
 
 import java.io.File;
 
@@ -100,12 +99,8 @@ public class SaveActivity extends Activity {
             @Override
             public void onResponse(Call<Cap> call, Response<Cap> response) {
                 Cap cap = response.body();
-                Intent intent = new Intent(getApplicationContext(), CapActivity.class);
-                intent.putExtra("id", cap.getId());
-                intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
-                intent.putExtra("capName", cap.getCapName());
-                intent.putExtra("googleDriveName", cap.getGoogleDriveID());
-                intent.putExtra("creationDate", cap.getCreationDate());
+                Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
+                CapActivity.putValuesForCapIntent(intent, cap);
                 startActivity(intent);
             }
 

@@ -1,0 +1,103 @@
+package com.km.mbottlecapcollector;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.km.mbottlecapcollector.api.rest.API;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ReadCapActivity extends CapActivity {
+    private static final String TAG = ReadCapActivity.class.getSimpleName();
+    private AlertDialog.Builder builder;
+    private AlertDialog alert;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_read_cap);
+        initializeViews();
+        initializeData();
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.confirm);
+        builder.setMessage(R.string.do_you_really_want_to_delete_this_cap);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.i(TAG, "Removing cap with ID " + capID);
+                API.bottleCaps().deleteCap(capID).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        int responseCode = response.code();
+                        if (responseCode == 200) {
+                            Toast.makeText(getApplicationContext(), "Successfully deleted cap ",
+                                    Toast.LENGTH_SHORT).show();
+                            goToMenuActivity();
+                        } else if (responseCode == 404) {
+                            Toast.makeText(getApplicationContext(), "Cap with " + capID + "was not found",
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (responseCode == 400) {
+                            Toast.makeText(getApplicationContext(), "Exception during removing from disc",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Unexpected exception: " + response,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Failure! " + t.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+
+        buttonRight.setOnClickListener(view -> {
+            alert = builder.create();
+            alert.show();
+        });
+
+        buttonLeft.setOnClickListener(view -> {
+            goToEditActivity();
+        });
+    }
+
+    @Override
+    public void initializeLeftButton() {
+        buttonLeft = findViewById(R.id.buttonEdit);
+    }
+
+    @Override
+    public void initializeRightButton() {
+        buttonRight = findViewById(R.id.buttonDelete);
+    }
+
+    @Override
+    public void initializeCapNameField() {
+        textViewEditCapName = findViewById(R.id.textViewCapName);
+    }
+
+    private void goToEditActivity() {
+        Intent intent = new Intent(this, EditActivity.class);
+        putValuesForCapIntent(intent, capID, url, textViewEditCapName.getText().toString(),
+                textViewGoogleDriveName.getText().toString(), textViewCreationDate.getText().toString());
+        startActivity(intent);
+    }
+}

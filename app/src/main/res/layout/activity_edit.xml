@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:weightSum="7"
+    tools:context=".EditActivity">
+
+    <TableRow
+        android:layout_weight="3"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/capPicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="1"
+        android:weightSum="3"
+        android:background="@color/colorMainLayout">
+
+        <TextView
+            android:id="@+id/textViewCapNameLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/name"/>
+
+        <EditText
+            android:id="@+id/editTextCapName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="1"
+        android:weightSum="3"
+        android:background="@color/colorMainLayout">
+
+        <TextView
+            android:id="@+id/textViewGoogleDriveNameLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/google_drive_id"/>
+
+        <TextView
+            android:id="@+id/textViewGoogleDriveName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center" />
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="1"
+        android:weightSum="3"
+        android:background="@color/colorMainLayout">
+
+        <TextView
+            android:id="@+id/textViewCreationDateLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/creation_date"/>
+
+        <TextView
+            android:id="@+id/textViewCreationDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/colorMainLayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/colorBackground"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/buttonUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/colorBackground"
+                android:text="@string/update" />
+        </LinearLayout>
+    </TableRow>
+</TableLayout>
