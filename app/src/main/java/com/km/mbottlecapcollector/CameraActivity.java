@@ -108,12 +108,12 @@ public class CameraActivity extends Activity {
         textureView = (AdjustedTextureView) findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        takePictureButton = (Button) findViewById(R.id.btn_takepicture);
+        takePictureButton = findViewById(R.id.btn_takepicture);
         assert takePictureButton != null;
         deviceWidth = ScreenRatioHelper.getScreenWidth();
         Log.i(TAG, "Device Width: " + deviceWidth);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
-        screenSquare = new SquareOverlay(getApplicationContext(), deviceWidth);
+        screenSquare = new SquareOverlay(getApplicationContext(), deviceWidth, ScreenRatioHelper.getScreenHeight());
         rootLayout.addView(screenSquare);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,10 +233,10 @@ public class CameraActivity extends Activity {
                                     originalBitmap.getWidth(), originalBitmap.getHeight(), matrix, true);
                         }
                         Bitmap squareBitmap = Bitmap.createBitmap(originalBitmap,
-                                (int) (cameraImageRatio * deviceWidth * (1 - screenSquare.getRatio()) / 2),
-                                (int) (cameraImageRatio * deviceWidth * (1 - screenSquare.getRatio()) / 2),
-                                (int) ((deviceWidth * screenSquare.getRatio() * cameraImageRatio)),
-                                (int) ((deviceWidth * screenSquare.getRatio() * cameraImageRatio)));
+                                (int) (cameraImageRatio * deviceWidth * (1 - screenSquare.getCircleScreenRatio()) / 2),
+                                (int) (cameraImageRatio * deviceWidth * (1 - screenSquare.getCircleScreenRatio()) / 2),
+                                (int) ((deviceWidth * screenSquare.getCircleScreenRatio() * cameraImageRatio)),
+                                (int) ((deviceWidth * screenSquare.getCircleScreenRatio() * cameraImageRatio)));
                         Bitmap circleBitmap = getCircledBitmap(squareBitmap);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
