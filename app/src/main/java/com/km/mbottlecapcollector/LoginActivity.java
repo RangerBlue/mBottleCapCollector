@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.km.mbottlecapcollector.api.rest.API;
 
+import java.util.Calendar;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,6 +28,8 @@ public class LoginActivity extends Activity {
     private SharedPreferences prefs;
     private ProgressDialog progressBar;
     private CharSequence loggingMessage;
+    private int attemptCounter = 0;
+    private int maxAttemptsCounter = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,6 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         prefs = getSharedPreferences("UserData", MODE_PRIVATE);
         textViewLogin = findViewById(R.id.textViewUsername);
-
         editTextLogin = findViewById(R.id.editTextUsername);
 
         textViewPasswordOrState = findViewById(R.id.textViewPasswordOrState);
@@ -77,13 +80,20 @@ public class LoginActivity extends Activity {
                                 editor.putBoolean("authenticated", false);
                                 editor.putBoolean("logging", false);
                                 editor.commit();
+                                attemptCounter++;
+                                if (attemptCounter == maxAttemptsCounter) {
+                                    editor.putInt("lockedDay", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                                    editor.commit();
+                                    Toast.makeText(getApplicationContext(), getText(R.string.too_many_attempts), Toast.LENGTH_SHORT).show();
+                                    buttonLoginLogout.setEnabled(false);
+                                }
                             }
                         }
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                             progressBar.dismiss();
-                            Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.failure) + " " + t, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
@@ -93,7 +103,12 @@ public class LoginActivity extends Activity {
                 }
             }
         });
+
         switchPage();
+        if (isLocked()) {
+            buttonLoginLogout.setEnabled(false);
+            Toast.makeText(getApplicationContext(), getText(R.string.your_app_is_currently_blocked), Toast.LENGTH_SHORT).show();
+        }
         progressBar = new ProgressDialog(this);
         progressBar.setTitle(R.string.loading);
         progressBar.setMessage(loggingMessage);
@@ -124,4 +139,9 @@ public class LoginActivity extends Activity {
         return prefs.getBoolean("authenticated", false);
     }
 
+    private boolean isLocked() {
+        int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        int lockedDay = prefs.getInt("lockedDay", -1);
+        return lockedDay == currentDay;
+    }
 }

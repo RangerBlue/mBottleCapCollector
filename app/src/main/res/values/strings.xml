@@ -64,4 +64,6 @@
     <string name="menu_name">mBottleCapCollector</string>
     <string name="account">ACCOUNT</string>
     <string name="what_cap_are_you">WHAT CAP ARE YOU</string>
+    <string name="too_many_attempts">Too many attempts</string>
+    <string name="your_app_is_currently_blocked">Your app is currently blocked</string>
 </resources>
