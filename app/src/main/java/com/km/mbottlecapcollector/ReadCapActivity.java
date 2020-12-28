@@ -1,6 +1,7 @@
 package com.km.mbottlecapcollector;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ public class ReadCapActivity extends CapActivity {
     private static final String TAG = ReadCapActivity.class.getSimpleName();
     private AlertDialog.Builder builder;
     private AlertDialog alert;
+    private ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +34,11 @@ public class ReadCapActivity extends CapActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.i(TAG, "Removing cap with ID " + capID);
+                progressBar.show();
                 API.bottleCaps().deleteCap(capID).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        progressBar.dismiss();
                         int responseCode = response.code();
                         if (responseCode == 200) {
                             Toast.makeText(getApplicationContext(), "Successfully deleted cap ",
@@ -54,6 +58,7 @@ public class ReadCapActivity extends CapActivity {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        progressBar.dismiss();
                         Toast.makeText(getApplicationContext(), "Failure! " + t.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -77,6 +82,12 @@ public class ReadCapActivity extends CapActivity {
         buttonLeft.setOnClickListener(view -> {
             goToEditActivity();
         });
+
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(getString(R.string.deleting_cap));
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
     }
 
     @Override

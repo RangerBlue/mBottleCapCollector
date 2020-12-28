@@ -1,6 +1,7 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,8 @@ public class LoginActivity extends Activity {
     private EditText editTextPassword;
     private Button buttonLoginLogout;
     private SharedPreferences prefs;
+    private ProgressDialog progressBar;
+    private CharSequence loggingMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +41,10 @@ public class LoginActivity extends Activity {
 
         buttonLoginLogout = findViewById(R.id.buttonLoginLogout);
         buttonLoginLogout.setOnClickListener(view -> {
+            progressBar.show();
             SharedPreferences.Editor editor = prefs.edit();
             if (isAuthenticated()) {
+                progressBar.dismiss();
                 editor.putBoolean("authenticated", false);
                 editor.putString("login", "");
                 editor.putString("password", "");
@@ -59,14 +64,16 @@ public class LoginActivity extends Activity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.code() == 200) {
-                                Toast.makeText(getApplicationContext(), "Logged in... ", Toast.LENGTH_SHORT).show();
+                                progressBar.dismiss();
+                                Toast.makeText(getApplicationContext(), getText(R.string.logged_in), Toast.LENGTH_SHORT).show();
                                 editor.putBoolean("authenticated", true);
                                 editor.putBoolean("logging", false);
                                 editor.commit();
                                 switchPage();
                             }
                             if (response.code() == 401) {
-                                Toast.makeText(getApplicationContext(), "Wrong credentials... ", Toast.LENGTH_SHORT).show();
+                                progressBar.dismiss();
+                                Toast.makeText(getApplicationContext(), getText(R.string.wrong_credentials), Toast.LENGTH_SHORT).show();
                                 editor.putBoolean("authenticated", false);
                                 editor.putBoolean("logging", false);
                                 editor.commit();
@@ -75,16 +82,23 @@ public class LoginActivity extends Activity {
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), "Failure... " + t, Toast.LENGTH_SHORT).show();
+                            progressBar.dismiss();
+                            Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
-                    Toast.makeText(getApplicationContext(), "Inputs must not be empty",
+                    progressBar.dismiss();
+                    Toast.makeText(getApplicationContext(), getText(R.string.inputs_empty),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
         switchPage();
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(loggingMessage);
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
     }
 
     private void switchPage() {
@@ -94,12 +108,14 @@ public class LoginActivity extends Activity {
             textViewPasswordOrState.setText(R.string.logged);
             editTextPassword.setVisibility(View.INVISIBLE);
             buttonLoginLogout.setText(R.string.logout);
+            loggingMessage = getText(R.string.logging_out);
         } else {
             textViewLogin.setText(R.string.login);
             editTextLogin.setVisibility(View.VISIBLE);
             textViewPasswordOrState.setText(R.string.password);
             editTextPassword.setVisibility(View.VISIBLE);
             buttonLoginLogout.setText(R.string.login);
+            loggingMessage = getText(R.string.logging_in);
         }
 
     }

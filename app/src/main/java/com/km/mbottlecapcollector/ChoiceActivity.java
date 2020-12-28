@@ -1,6 +1,7 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class ChoiceActivity extends Activity {
     private Button retryButton;
     private Button yesButton;
     private File image = null;
+    private ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class ChoiceActivity extends Activity {
 
         yesButton = findViewById(R.id.buttonYes);
         yesButton.setOnClickListener(view -> {
+            progressBar.show();
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), image);
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("file", image.getName(), requestFile);
@@ -52,12 +55,14 @@ public class ChoiceActivity extends Activity {
 
                 @Override
                 public void onResponse(Call<ValidateCapResponse> call, Response<ValidateCapResponse> response) {
+                    progressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "Downloading results... ", Toast.LENGTH_SHORT).show();
                     goToValidateActivity(response.body());
                 }
 
                 @Override
                 public void onFailure(Call<ValidateCapResponse> call, Throwable t) {
+                    progressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "Try again! " + t.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -67,6 +72,12 @@ public class ChoiceActivity extends Activity {
         imageURI = getIntent().getStringExtra("URI");
         image = new File(imageURI);
         imageView.setImageDrawable(Drawable.createFromPath(image.toString()));
+
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(getString(R.string.validating_picture));
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
     }
 
     private void goToValidateActivity(ValidateCapResponse response) {

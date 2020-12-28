@@ -2,6 +2,7 @@ package com.km.mbottlecapcollector;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -51,8 +52,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,6 +90,8 @@ public class CameraActivity extends Activity {
     private int deviceWidth;
     private int cameraPreviewWidth;
     private String capturedImageURI;
+    private ProgressDialog progressBar;
+
     /**
      * Fixed values to ensure that preview don't have too high resolution which may cause
      * slow performance
@@ -98,7 +99,6 @@ public class CameraActivity extends Activity {
 
     private double cameraImageRatio = 1;
     private CameraManager manager;
-    private CameraCharacteristics characteristics;
     private StreamConfigurationMap map;
 
     @Override
@@ -121,7 +121,14 @@ public class CameraActivity extends Activity {
                 takePicture();
             }
         });
+        takePictureButton.setEnabled(false);
         cameraPreviewWidth = textureView.getWidth();
+
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(getString(R.string.loading_picture));
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
     }
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
@@ -191,6 +198,7 @@ public class CameraActivity extends Activity {
     }
 
     protected void takePicture() {
+        progressBar.show();
         if (null == cameraDevice) {
             Log.i(TAG, "There is no camera available");
             return;
@@ -206,7 +214,7 @@ public class CameraActivity extends Activity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File fileCircle = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() + "circle.jpg");
+            final File fileCircle = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), +System.currentTimeMillis() + ".jpg");
             cameraImageRatio = imageResolution.getHeight() / (double) cameraPreviewWidth;
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
@@ -264,6 +272,7 @@ public class CameraActivity extends Activity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
+                    progressBar.dismiss();
                     goToChoiceActivity();
                 }
             };
@@ -297,6 +306,7 @@ public class CameraActivity extends Activity {
             cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                    takePictureButton.setEnabled(true);
                     //The camera is already closed
                     if (null == cameraDevice) {
                         return;

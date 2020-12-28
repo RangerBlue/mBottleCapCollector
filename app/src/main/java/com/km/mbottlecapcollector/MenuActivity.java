@@ -39,7 +39,6 @@ public class MenuActivity extends Activity {
 
         viewButton = findViewById(R.id.viewButton);
         viewButton.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "Performing call... ", Toast.LENGTH_SHORT).show();
             spinner.setVisibility(View.VISIBLE);
             checkButton.setVisibility(View.INVISIBLE);
             viewButton.setVisibility(View.INVISIBLE);
@@ -47,12 +46,10 @@ public class MenuActivity extends Activity {
             API.bottleCaps().links().enqueue(new Callback<List<PictureWrapper>>() {
                 @Override
                 public void onResponse(Call<List<PictureWrapper>> call, Response<List<PictureWrapper>> response) {
-                    if(response.code() == 401){
+                    if (response.code() == 401) {
                         Toast.makeText(getApplicationContext(), "You are not allowed to perform" +
                                 "this action ", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+                    } else {
                         spinner.setVisibility(View.GONE);
                         goToGalleryActivity(response);
                     }
@@ -86,7 +83,6 @@ public class MenuActivity extends Activity {
     }
 
     private void goToGalleryActivity(Response<List<PictureWrapper>> response) {
-        Toast.makeText(getApplicationContext(), "Opening gallery... ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, GalleryActivity.class);
         intent.putParcelableArrayListExtra("caps", (ArrayList<? extends Parcelable>) response.body());
         startActivity(intent);

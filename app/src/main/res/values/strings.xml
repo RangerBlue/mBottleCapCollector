@@ -43,5 +43,16 @@
     <string name="creation_date">CREATION DATE</string>
     <string name="cancel">CANCEL</string>
     <string name="update">UPDATE</string>
-
+    <string name="loading">Loading</string>
+    <string name="loading_cap">Cap is loading</string>
+    <string name="loading_picture">Processing picture...</string>
+    <string name="validating_picture">Validating picture...</string>
+    <string name="saving_cap">Saving cap...</string>
+    <string name="deleting_cap">Deleting cap...</string>
+    <string name="logged_in">Logged in!</string>
+    <string name="wrong_credentials">Wrong credentials!</string>
+    <string name="failure">"Failure... "</string>
+    <string name="inputs_empty">Inputs must not be empty</string>
+    <string name="logging_in">Logging in..</string>
+    <string name="logging_out">Logging out..</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.km.mbottlecapcollector;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import retrofit2.Response;
 
 public class EditActivity extends CapActivity {
     private static final String TAG = EditActivity.class.getSimpleName();
+    private ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +23,11 @@ public class EditActivity extends CapActivity {
         initializeViews();
         initializeData();
         buttonRight.setOnClickListener(view -> {
-            System.out.println("CLICK");
+            progressBar.show();
             API.bottleCaps().updateCap(capID, textViewEditCapName.getText().toString()).enqueue(new Callback<Cap>() {
                 @Override
                 public void onResponse(Call<Cap> call, Response<Cap> response) {
+                    progressBar.dismiss();
                     int responseCode = response.code();
                     if (responseCode == 200) {
                         Toast.makeText(getApplicationContext(), "Successfully updated cap ",
@@ -47,10 +50,17 @@ public class EditActivity extends CapActivity {
 
                 @Override
                 public void onFailure(Call<Cap> call, Throwable t) {
+                    progressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "Failure! " + t.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         });
+
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(getString(R.string.saving_cap));
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
     }
 
     @Override

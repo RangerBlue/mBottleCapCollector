@@ -1,6 +1,7 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ public class SaveActivity extends Activity {
     private Button buttonSave;
     private String imageURI;
     private File image;
+    private ProgressDialog progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class SaveActivity extends Activity {
         editTextCapName = findViewById(R.id.editTextCapName);
         buttonSave = findViewById(R.id.buttonSaveCap);
         buttonSave.setOnClickListener(view -> {
+            progressBar.show();
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), image);
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("file", image.getName(), requestFile);
@@ -61,6 +65,7 @@ public class SaveActivity extends Activity {
 
                 @Override
                 public void onFailure(Call<Long> call, Throwable t) {
+                    progressBar.dismiss();
                     Toast.makeText(getApplicationContext(), "Failure! " + t.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -92,6 +97,12 @@ public class SaveActivity extends Activity {
 
             }
         });
+
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(getString(R.string.saving_cap));
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
     }
 
     private void goToCapActivity(long id) {
@@ -101,6 +112,7 @@ public class SaveActivity extends Activity {
                 Cap cap = response.body();
                 Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
                 CapActivity.putValuesForCapIntent(intent, cap);
+                progressBar.dismiss();
                 startActivity(intent);
             }
 

@@ -1,6 +1,7 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,6 +32,7 @@ public class GalleryActivity extends Activity {
     private int itemsOnPage = 0;
     private int numberOfPages = 0;
     private int currentPage = 0;
+    ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +59,14 @@ public class GalleryActivity extends Activity {
         Log.i(TAG, "Number of items :" + numberOfItems);
         layoutManager = new GridLayoutManager(getApplicationContext(), ScreenRatioHelper.CAP_IN_ROW_AMOUNT);
         recyclerView.setLayoutManager(layoutManager);
-        System.out.println(recyclerView.getHeight() + "  " + recyclerView.getWidth());
 
-        GalleryAdapter adapter = new GalleryAdapter(new ArrayList<>(capList.subList(currentStartNumber, currentLastNumber)));
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(getString(R.string.loading_cap));
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
+
+        GalleryAdapter adapter = new GalleryAdapter(new ArrayList<>(capList.subList(currentStartNumber, currentLastNumber)), progressBar);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 

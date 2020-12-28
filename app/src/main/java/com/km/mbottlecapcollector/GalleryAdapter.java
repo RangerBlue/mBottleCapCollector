@@ -1,5 +1,6 @@
 package com.km.mbottlecapcollector;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -23,9 +24,11 @@ import retrofit2.Response;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
     private ArrayList<PictureWrapper> galleryList;
+    private ProgressDialog progressBar;
 
-    public GalleryAdapter(ArrayList<PictureWrapper> galleryList) {
+    public GalleryAdapter(ArrayList<PictureWrapper> galleryList, ProgressDialog bar) {
         this.galleryList = galleryList;
+        this.progressBar = bar;
     }
 
     @NonNull
@@ -33,7 +36,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_cell_layout,
                 parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, progressBar);
     }
 
     @Override
@@ -52,26 +55,35 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         private ImageView img;
         private long id;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, ProgressDialog progressDialog) {
             super(view);
             img = view.findViewById(R.id.galleryImage);
             img.setOnClickListener(view1 -> {
+                progressDialog.show();
                 API.bottleCaps().cap(id).enqueue(new Callback<Cap>() {
                     @Override
                     public void onResponse(Call<Cap> call, Response<Cap> response) {
-                        Cap cap = response.body();
-                        Intent intent = new Intent(view.getContext().getApplicationContext(), ReadCapActivity.class);
-                        intent.putExtra("id", cap.getId());
-                        intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
-                        intent.putExtra("capName", cap.getCapName());
-                        intent.putExtra("googleDriveName", cap.getGoogleDriveID());
-                        intent.putExtra("creationDate", cap.getCreationDate());
-                        view.getContext().startActivity(intent);
+                        progressDialog.dismiss();
+                        int responseCode = response.code();
+                        if (responseCode == 200) {
+                            Cap cap = response.body();
+                            Intent intent = new Intent(view.getContext().getApplicationContext(), ReadCapActivity.class);
+                            intent.putExtra("id", cap.getId());
+                            intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
+                            intent.putExtra("capName", cap.getCapName());
+                            intent.putExtra("googleDriveName", cap.getGoogleDriveID());
+                            intent.putExtra("creationDate", cap.getCreationDate());
+                            view.getContext().startActivity(intent);
+                        } else if (responseCode == 404) {
+                            Toast.makeText(view.getContext(), "Cap was not found",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<Cap> call, Throwable t) {
                         Toast.makeText(view.getContext(), "Failure", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 });
             });
