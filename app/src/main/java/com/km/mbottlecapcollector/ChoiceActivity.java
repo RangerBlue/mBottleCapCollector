@@ -3,7 +3,6 @@ package com.km.mbottlecapcollector;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 import com.km.mbottlecapcollector.api.model.ValidateCapResponse;
 import com.km.mbottlecapcollector.api.rest.API;
 import com.km.mbottlecapcollector.util.ScreenRatioHelper;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class ChoiceActivity extends Activity {
         imageView = findViewById(R.id.capImage);
         imageURI = getIntent().getStringExtra("URI");
         image = new File(imageURI);
-        imageView.setImageDrawable(Drawable.createFromPath(image.toString()));
+        Picasso.get().load(image).into(imageView);
 
         progressBar = new ProgressDialog(this);
         progressBar.setTitle(R.string.loading);
