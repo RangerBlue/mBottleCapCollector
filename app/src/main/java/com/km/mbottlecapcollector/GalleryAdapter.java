@@ -82,7 +82,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
                     @Override
                     public void onFailure(Call<Cap> call, Throwable t) {
-                        Toast.makeText(view.getContext(), "Failure", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(view.getContext(), view.getContext().getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 });

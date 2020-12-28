@@ -3,8 +3,8 @@
     <string name="go_to_camera">Go to camera</string>
     <string name="take_picture">Take picture</string>
     <string name="app_name_logo">BOTTLE CAP COLLECTOR</string>
-    <string name="check">CHECK</string>
-    <string name="view">VIEW</string>
+    <string name="check">CHECK CAP</string>
+    <string name="view">GALLERY</string>
     <string name="does_picture_look_fine">DOES THE PICTURE LOOK FINE?</string>
     <string name="yes">YES</string>
     <string name="retry">RETRY</string>
@@ -60,4 +60,8 @@
     <string name="outside_of_working_hours">Application is currently outside of working hours, it is not accessible between %1$S and %2$S</string>
     <string name="no_internet_access">Device does not have internet access, turn on your internet connection</string>
     <string name="hello_admin">Hello admin!</string>
+    <string name="loading_gallery">Loading gallery...</string>
+    <string name="menu_name">mBottleCapCollector</string>
+    <string name="account">ACCOUNT</string>
+    <string name="what_cap_are_you">WHAT CAP ARE YOU</string>
 </resources>

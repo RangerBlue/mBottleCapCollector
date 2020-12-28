@@ -59,7 +59,7 @@ public class ReadCapActivity extends CapActivity {
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         progressBar.dismiss();
-                        Toast.makeText(getApplicationContext(), "Failure! " + t.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogInterface.dismiss();

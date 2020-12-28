@@ -1,6 +1,7 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.os.Bundle;
@@ -24,14 +25,13 @@ public class MenuActivity extends Activity {
     private Button checkButton;
     private Button viewButton;
     private Button adminButton;
-    private ProgressBar spinner;
+    private Button whatCapAreYouButton;
+    private ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        spinner = findViewById(R.id.progressBar1);
-        spinner.setVisibility(View.GONE);
         checkButton = findViewById(R.id.checkButton);
         checkButton.setOnClickListener(view -> {
             goToCameraActivity();
@@ -39,18 +39,15 @@ public class MenuActivity extends Activity {
 
         viewButton = findViewById(R.id.viewButton);
         viewButton.setOnClickListener(view -> {
-            spinner.setVisibility(View.VISIBLE);
-            checkButton.setVisibility(View.INVISIBLE);
-            viewButton.setVisibility(View.INVISIBLE);
-            adminButton.setVisibility(View.INVISIBLE);
+            progressBar.show();
             API.bottleCaps().links().enqueue(new Callback<List<PictureWrapper>>() {
                 @Override
                 public void onResponse(Call<List<PictureWrapper>> call, Response<List<PictureWrapper>> response) {
+                    progressBar.dismiss();
                     if (response.code() == 401) {
                         Toast.makeText(getApplicationContext(), "You are not allowed to perform" +
                                 "this action ", Toast.LENGTH_SHORT).show();
                     } else {
-                        spinner.setVisibility(View.GONE);
                         goToGalleryActivity(response);
                     }
 
@@ -58,7 +55,8 @@ public class MenuActivity extends Activity {
 
                 @Override
                 public void onFailure(Call<List<PictureWrapper>> call, Throwable t) {
-
+                    progressBar.dismiss();
+                    Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -67,14 +65,22 @@ public class MenuActivity extends Activity {
         adminButton.setOnClickListener(view -> {
             goToLoginActivity();
         });
+
+        whatCapAreYouButton = findViewById(R.id.whatCapAreYouButton);
+        whatCapAreYouButton.setOnClickListener(view -> {
+            Toast.makeText(getApplicationContext(), "What cap are you ", Toast.LENGTH_SHORT).show();
+        });
+
+        progressBar = new ProgressDialog(this);
+        progressBar.setTitle(R.string.loading);
+        progressBar.setMessage(getString(R.string.loading_gallery));
+        progressBar.setCancelable(false);
+        progressBar.dismiss();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkButton.setVisibility(View.VISIBLE);
-        viewButton.setVisibility(View.VISIBLE);
-        adminButton.setVisibility(View.VISIBLE);
     }
 
     private void goToCameraActivity() {

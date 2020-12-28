@@ -66,7 +66,7 @@ public class SaveActivity extends Activity {
                 @Override
                 public void onFailure(Call<Long> call, Throwable t) {
                     progressBar.dismiss();
-                    Toast.makeText(getApplicationContext(), "Failure! " + t.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -118,7 +118,7 @@ public class SaveActivity extends Activity {
 
             @Override
             public void onFailure(Call<Cap> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
             }
         });
     }
