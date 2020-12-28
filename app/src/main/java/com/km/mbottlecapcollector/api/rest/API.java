@@ -38,7 +38,6 @@ public class API {
                     .build()
                     .create(endpoint);
         } else {
-            System.out.println("NO AUTH");
             return new Retrofit.Builder()
                     .baseUrl(Config.API_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
