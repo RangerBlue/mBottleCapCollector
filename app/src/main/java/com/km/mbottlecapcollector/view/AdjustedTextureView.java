@@ -1,4 +1,4 @@
-package com.km.mbottlecapcollector;
+package com.km.mbottlecapcollector.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

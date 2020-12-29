@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.km.mbottlecapcollector.api.model.PictureWrapper;
 import com.km.mbottlecapcollector.util.ScreenRatioHelper;
+import com.km.mbottlecapcollector.view.GalleryAdapter;
 
 import java.util.ArrayList;
 

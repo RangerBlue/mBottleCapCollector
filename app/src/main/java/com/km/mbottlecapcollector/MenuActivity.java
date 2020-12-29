@@ -5,9 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.km.mbottlecapcollector.api.model.PictureWrapper;
@@ -68,7 +66,7 @@ public class MenuActivity extends Activity {
 
         whatCapAreYouButton = findViewById(R.id.whatCapAreYouButton);
         whatCapAreYouButton.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "What cap are you ", Toast.LENGTH_SHORT).show();
+            goToWhatCapYouAreActivity();
         });
 
         progressBar = new ProgressDialog(this);
@@ -84,7 +82,13 @@ public class MenuActivity extends Activity {
     }
 
     private void goToCameraActivity() {
-        Intent intent = new Intent(this, CameraActivity.class);
+        Intent intent = new Intent(this, BackCameraActivity.class);
+        intent.putExtra("isFrontCamera", true);
+        startActivity(intent);
+    }
+
+    private void goToWhatCapYouAreActivity() {
+        Intent intent = new Intent(this, FrontCameraActivity.class);
         startActivity(intent);
     }
 

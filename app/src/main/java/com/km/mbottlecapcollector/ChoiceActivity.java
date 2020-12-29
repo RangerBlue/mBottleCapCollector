@@ -29,16 +29,24 @@ public class ChoiceActivity extends Activity {
     private Button yesButton;
     private File image = null;
     private ProgressDialog progressBar;
+    private boolean goToValidateScreen = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
-
+        String className = getIntent().getStringExtra("className");
+        goToValidateScreen = goToValidateScreen(className);
         retryButton = findViewById(R.id.buttonRetry);
         retryButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, CameraActivity.class);
-            startActivity(intent);
+            try {
+                Class<?> returnActivity = Class.forName(className);
+                Intent intent = new Intent(this, returnActivity);
+                startActivity(intent);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
         });
 
         yesButton = findViewById(R.id.buttonYes);
@@ -51,21 +59,28 @@ public class ChoiceActivity extends Activity {
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"),
                     image.getName());
 
-            API.bottleCaps().validateCap(name, body).enqueue(new retrofit2.Callback<ValidateCapResponse>() {
 
-                @Override
-                public void onResponse(Call<ValidateCapResponse> call, Response<ValidateCapResponse> response) {
-                    progressBar.dismiss();
-                    Toast.makeText(getApplicationContext(), "Downloading results... ", Toast.LENGTH_SHORT).show();
-                    goToValidateActivity(response.body());
-                }
+            if(goToValidateScreen){
+                API.bottleCaps().validateCap(name, body).enqueue(new retrofit2.Callback<ValidateCapResponse>() {
 
-                @Override
-                public void onFailure(Call<ValidateCapResponse> call, Throwable t) {
-                    progressBar.dismiss();
-                    Toast.makeText(getApplicationContext(), "Try again! " + t.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onResponse(Call<ValidateCapResponse> call, Response<ValidateCapResponse> response) {
+                        progressBar.dismiss();
+                        Toast.makeText(getApplicationContext(), "Downloading results... ", Toast.LENGTH_SHORT).show();
+                        goToValidateActivity(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ValidateCapResponse> call, Throwable t) {
+                        progressBar.dismiss();
+                        Toast.makeText(getApplicationContext(), "Try again! " + t.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                progressBar.dismiss();
+                Toast.makeText(getApplicationContext(), "What cap you are", Toast.LENGTH_SHORT).show();
+            }
+
         });
 
         imageView = findViewById(R.id.capImage);
@@ -97,5 +112,12 @@ public class ChoiceActivity extends Activity {
         intent.putExtra("uri", imageURI);
         intent.putExtra("distribution", response.getSimilarityDistribution());
         startActivity(intent);
+    }
+
+    private boolean goToValidateScreen(String className){
+        if(className.equals(FrontCameraActivity.class.getName())){
+            return false;
+        }
+        return true;
     }
 }

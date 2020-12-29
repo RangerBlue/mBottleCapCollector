@@ -1,4 +1,4 @@
-package com.km.mbottlecapcollector;
+package com.km.mbottlecapcollector.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.km.mbottlecapcollector.R;
+import com.km.mbottlecapcollector.ReadCapActivity;
 import com.km.mbottlecapcollector.api.model.Cap;
 import com.km.mbottlecapcollector.api.model.PictureWrapper;
 import com.km.mbottlecapcollector.api.rest.API;
