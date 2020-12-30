@@ -19,10 +19,6 @@ public class FileHelper {
     public static String CAP_PREFIX = "cap";
     public static String SELFIE_PREFIX = "face";
     public static String SCREENSHOT_PREFIX = "sc";
-    /**
-     * Authority from manifest file
-     */
-    private static String AUTHORITY = "com.km.mbottlecapcollector.provider";
 
     public static void save(byte[] bytes, File file, Context context) throws IOException {
         OutputStream output = null;
@@ -38,17 +34,6 @@ public class FileHelper {
         }
     }
 
-    public static void shareImage(File file, Context context) {
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("image/jpeg");
-        Uri imageUri = FileProvider.getUriForFile(
-                context,
-                AUTHORITY,
-                file);
-        share.putExtra(Intent.EXTRA_STREAM, imageUri);
-        share.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        context.startActivity(Intent.createChooser(share, context.getText(R.string.choose_share_method)));
-    }
 
     public static void deleteFilesInPictureFolder(Context context) {
         File pictureFolder = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);

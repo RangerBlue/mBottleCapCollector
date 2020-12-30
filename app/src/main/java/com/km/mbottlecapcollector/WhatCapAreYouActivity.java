@@ -1,10 +1,13 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,10 @@ import java.io.IOException;
 
 public class WhatCapAreYouActivity extends Activity {
     private static final String TAG = WhatCapAreYouActivity.class.getSimpleName();
+    /**
+     * Authority from manifest file
+     */
+    private static String AUTHORITY = "com.km.mbottlecapcollector.provider";
     private TextView textViewYou;
     private TextView textViewYourCap;
     private ImageView imageViewYou;
@@ -42,7 +49,7 @@ public class WhatCapAreYouActivity extends Activity {
             final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
                     .findViewById(android.R.id.content)).getChildAt(0);
             file = file != null ? file : takeScreenshot(createBitmap(viewGroup));
-            FileHelper.shareImage(file, getApplicationContext());
+            shareImage(file);
         });
 
         String imageURI = getIntent().getStringExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI);
@@ -74,5 +81,17 @@ public class WhatCapAreYouActivity extends Activity {
             e.printStackTrace();
         }
         return file;
+    }
+
+    public void shareImage(File file) {
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("image/jpeg");
+        Uri imageUri = FileProvider.getUriForFile(
+                this,
+                AUTHORITY,
+                file);
+        share.putExtra(Intent.EXTRA_STREAM, imageUri);
+        share.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(share, getText(R.string.choose_share_method)));
     }
 }
