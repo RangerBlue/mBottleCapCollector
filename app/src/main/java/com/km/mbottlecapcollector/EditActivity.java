@@ -24,26 +24,35 @@ public class EditActivity extends CapActivity {
         initializeData();
         buttonRight.setOnClickListener(view -> {
             progressBar.show();
-            API.bottleCaps().updateCap(capID, textViewEditCapName.getText().toString()).enqueue(new Callback<Cap>() {
+            API.bottleCaps().updateCap(capID, textViewEditCapName.getText().
+                    toString()).enqueue(new Callback<Cap>() {
                 @Override
                 public void onResponse(Call<Cap> call, Response<Cap> response) {
                     progressBar.dismiss();
                     int responseCode = response.code();
                     if (responseCode == 200) {
-                        Toast.makeText(getApplicationContext(), "Successfully updated cap ",
+                        Toast.makeText(
+                                getApplicationContext(),
+                                getText(R.string.successfully_updated_cap),
                                 Toast.LENGTH_SHORT).show();
                         Cap cap = response.body();
                         Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
                         CapActivity.putValuesForCapIntent(intent, cap);
                         startActivity(intent);
-                    }else if (responseCode == 404) {
-                        Toast.makeText(getApplicationContext(), "Cap with " + capID + "was not found",
+                    } else if (responseCode == 404) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                getString(R.string.cap_with_id_was_not_found, capID),
                                 Toast.LENGTH_SHORT).show();
-                    }else if(response.code() == 401){
-                        Toast.makeText(getApplicationContext(), "You are not allowed to perform" +
-                                "this action "+response, Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(getApplicationContext(), "Unexpected exception: " + response,
+                    } else if (response.code() == 401) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                getText(R.string.action_not_allowed),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                getText(R.string.unexpected_exception) + " " + response,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -51,7 +60,10 @@ public class EditActivity extends CapActivity {
                 @Override
                 public void onFailure(Call<Cap> call, Throwable t) {
                     progressBar.dismiss();
-                    Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            getText(R.string.failure) + " " + t,
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         });

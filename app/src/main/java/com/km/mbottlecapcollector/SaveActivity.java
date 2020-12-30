@@ -54,10 +54,13 @@ public class SaveActivity extends Activity {
                     if(response.code() == 201){
                         goToCapActivity(response.body().longValue());
                     }else if(response.code() == 401){
-                        Toast.makeText(getApplicationContext(), "You are not allowed to perform" +
-                                "this action "+response, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                getApplicationContext(),
+                                getText(R.string.action_not_allowed),
+                                Toast.LENGTH_SHORT).show();
                     } else{
-                        Toast.makeText(getApplicationContext(), "Try again.. "+response,
+                        Toast.makeText(
+                                getApplicationContext(), getText(R.string.try_again) + " " +response,
                                 Toast.LENGTH_SHORT).show();
                     }
 
@@ -66,7 +69,10 @@ public class SaveActivity extends Activity {
                 @Override
                 public void onFailure(Call<Long> call, Throwable t) {
                     progressBar.dismiss();
-                    Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            getText(R.string.failure) +" "+ t,
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -118,7 +124,10 @@ public class SaveActivity extends Activity {
 
             @Override
             public void onFailure(Call<Cap> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        getApplicationContext(),
+                        getText(R.string.failure) +" "+ t,
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }

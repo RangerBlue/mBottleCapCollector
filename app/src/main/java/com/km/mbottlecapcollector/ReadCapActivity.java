@@ -41,17 +41,30 @@ public class ReadCapActivity extends CapActivity {
                         progressBar.dismiss();
                         int responseCode = response.code();
                         if (responseCode == 200) {
-                            Toast.makeText(getApplicationContext(), "Successfully deleted cap ",
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    getText(R.string.successfully_deleted_cap),
                                     Toast.LENGTH_SHORT).show();
                             goToMenuActivity();
                         } else if (responseCode == 404) {
-                            Toast.makeText(getApplicationContext(), "Cap with " + capID + "was not found",
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    getString(R.string.cap_with_id_was_not_found, capID),
                                     Toast.LENGTH_SHORT).show();
                         } else if (responseCode == 400) {
-                            Toast.makeText(getApplicationContext(), "Exception during removing from disc",
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    getText(R.string.exception_disc),
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (response.code() == 401) {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    getText(R.string.action_not_allowed),
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Unexpected exception: " + response,
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Unexpected exception: " + response,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -59,7 +72,10 @@ public class ReadCapActivity extends CapActivity {
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         progressBar.dismiss();
-                        Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                getApplicationContext(),
+                                getText(R.string.failure) + " " + t,
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogInterface.dismiss();

@@ -67,4 +67,16 @@
     <string name="too_many_attempts">Too many attempts</string>
     <string name="your_app_is_currently_blocked">Your app is currently blocked</string>
     <string name="you_must_grant_permissions">You must grant permissions to use camera</string>
+    <string name="you">YOU</string>
+    <string name="your_cap">YOUR CAP</string>
+    <string name="share">SHARE</string>
+    <string name="choose_share_method">Choose share method:</string>
+    <string name="cap_was_not_found">Cap was not found</string>
+    <string name="try_again">"Try again! "</string>
+    <string name="successfully_updated_cap">Successfully updated cap</string>
+    <string name="cap_with_id_was_not_found">Cap with ID %1$d was not found</string>
+    <string name="action_not_allowed">You are not allowed to perform this action</string>
+    <string name="unexpected_exception">"Unexpected exception: "</string>
+    <string name="successfully_deleted_cap">Successfully deleted cap</string>
+    <string name="exception_disc">Exception during removing from disc</string>
 </resources>

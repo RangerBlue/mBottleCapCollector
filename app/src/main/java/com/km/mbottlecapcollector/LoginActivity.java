@@ -68,7 +68,10 @@ public class LoginActivity extends Activity {
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.code() == 200) {
                                 progressBar.dismiss();
-                                Toast.makeText(getApplicationContext(), getText(R.string.logged_in), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        getText(R.string.logged_in),
+                                        Toast.LENGTH_SHORT).show();
                                 editor.putBoolean("authenticated", true);
                                 editor.putBoolean("logging", false);
                                 editor.commit();
@@ -76,15 +79,23 @@ public class LoginActivity extends Activity {
                             }
                             if (response.code() == 401) {
                                 progressBar.dismiss();
-                                Toast.makeText(getApplicationContext(), getText(R.string.wrong_credentials), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        getText(R.string.wrong_credentials),
+                                        Toast.LENGTH_SHORT).show();
                                 editor.putBoolean("authenticated", false);
                                 editor.putBoolean("logging", false);
                                 editor.commit();
                                 attemptCounter++;
                                 if (attemptCounter == maxAttemptsCounter) {
-                                    editor.putInt("lockedDay", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                                    editor.putInt(
+                                            "lockedDay",
+                                            Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                                     editor.commit();
-                                    Toast.makeText(getApplicationContext(), getText(R.string.too_many_attempts), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            getText(R.string.too_many_attempts),
+                                            Toast.LENGTH_SHORT).show();
                                     buttonLoginLogout.setEnabled(false);
                                 }
                             }
@@ -93,7 +104,10 @@ public class LoginActivity extends Activity {
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                             progressBar.dismiss();
-                            Toast.makeText(getApplicationContext(), getText(R.string.failure) + " " + t, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    getText(R.string.failure) + " " + t,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
@@ -107,7 +121,10 @@ public class LoginActivity extends Activity {
         switchPage();
         if (isLocked()) {
             buttonLoginLogout.setEnabled(false);
-            Toast.makeText(getApplicationContext(), getText(R.string.your_app_is_currently_blocked), Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    getApplicationContext(),
+                    getText(R.string.your_app_is_currently_blocked),
+                    Toast.LENGTH_SHORT).show();
         }
         progressBar = new ProgressDialog(this);
         progressBar.setTitle(R.string.loading);

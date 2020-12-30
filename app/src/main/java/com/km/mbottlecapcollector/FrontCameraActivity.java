@@ -5,6 +5,7 @@ import android.graphics.Matrix;
 import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 
+import com.km.mbottlecapcollector.util.FileHelper;
 import com.km.mbottlecapcollector.util.ScreenRatioHelper;
 import com.km.mbottlecapcollector.view.CameraOverlay;
 import com.km.mbottlecapcollector.view.FrontCameraOverlay;
@@ -24,9 +25,9 @@ public class FrontCameraActivity extends CameraActivity {
     @Override
     public String getCameraNumber() throws CameraAccessException {
         String[] cameraList = manager.getCameraIdList();
-        if(cameraList.length == 1){
+        if (cameraList.length == 1) {
             return cameraList[0];
-        }else{
+        } else {
             return cameraList[1];
         }
     }
@@ -54,7 +55,7 @@ public class FrontCameraActivity extends CameraActivity {
 
     @Override
     public String getFileSuffix() {
-        return "face";
+        return FileHelper.SELFIE_PREFIX;
     }
 
 }

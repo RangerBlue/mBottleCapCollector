@@ -69,22 +69,25 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                         int responseCode = response.code();
                         if (responseCode == 200) {
                             Cap cap = response.body();
-                            Intent intent = new Intent(view.getContext().getApplicationContext(), ReadCapActivity.class);
+                            Intent intent = new Intent(view.getContext().getApplicationContext(),
+                                    ReadCapActivity.class);
                             intent.putExtra("id", cap.getId());
-                            intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
+                            intent.putExtra("url", cap.getFileLocation(
+                                    ScreenRatioHelper.getStandaloneCapWidth()));
                             intent.putExtra("capName", cap.getCapName());
                             intent.putExtra("googleDriveName", cap.getGoogleDriveID());
                             intent.putExtra("creationDate", cap.getCreationDate());
                             view.getContext().startActivity(intent);
                         } else if (responseCode == 404) {
-                            Toast.makeText(view.getContext(), "Cap was not found",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(view.getContext(), view.getContext().
+                                    getText(R.string.cap_was_not_found), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Cap> call, Throwable t) {
-                        Toast.makeText(view.getContext(), view.getContext().getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(view.getContext(), view.getContext().getText(R.string.failure) + " " + t, Toast.LENGTH_SHORT).
+                                show();
                         progressDialog.dismiss();
                     }
                 });

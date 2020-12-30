@@ -21,12 +21,12 @@ import java.util.Date;
 public class WelcomeScreenActivity extends Activity {
     private static final String TAG = WelcomeScreenActivity.class.getSimpleName();
     private Handler handler;
-    private int delayInSecondsWelcome = 2;
-    private int delayInSecondsWorkingHours = 5;
-    private int delayInSecondsNoInternet = 3;
+    private final int DELAY_IN_SECONDS_WELCOME = 2;
+    private final int DELAY_IN_SECONDS_WORKING_HOURS = 5;
+    private final int DELAY_IN_SECONDS_NO_INTERNET = 3;
     public static Context context;
-    private String from = "10:05";
-    private String to = "00:15";
+    private final String FROM = "10:05";
+    private final String TO = "00:15";
     private AlertDialog.Builder builder;
     private AlertDialog alert;
     private TextView welcomeText;
@@ -64,13 +64,13 @@ public class WelcomeScreenActivity extends Activity {
                 handler.postDelayed(() -> {
                     goToMenuActivity();
                     finish();
-                }, delayInSecondsWelcome * 1000);
+                }, DELAY_IN_SECONDS_WELCOME * 1000);
             } else {
                 welcomeText.setText(getString(R.string.no_internet_access));
                 handler.postDelayed(() -> {
                     this.finishAffinity();
                     finish();
-                }, delayInSecondsNoInternet * 1000);
+                }, DELAY_IN_SECONDS_NO_INTERNET * 1000);
             }
 
         } else {
@@ -78,11 +78,11 @@ public class WelcomeScreenActivity extends Activity {
                 alert = builder.create();
                 alert.show();
             } else {
-                welcomeText.setText(getString(R.string.outside_of_working_hours, to, from));
+                welcomeText.setText(getString(R.string.outside_of_working_hours, TO, FROM));
                 handler.postDelayed(() -> {
                     closeApplication();
                     finish();
-                }, delayInSecondsWorkingHours * 1000);
+                }, DELAY_IN_SECONDS_WORKING_HOURS * 1000);
             }
         }
 
@@ -104,8 +104,8 @@ public class WelcomeScreenActivity extends Activity {
         Date dateTo;
         Date nowDate;
         try {
-            dateFrom = formatter.parse(from);
-            dateTo = formatter.parse(to);
+            dateFrom = formatter.parse(FROM);
+            dateTo = formatter.parse(TO);
             nowDate = formatter.parse(formatter.format(now));
         } catch (ParseException e) {
             return false;

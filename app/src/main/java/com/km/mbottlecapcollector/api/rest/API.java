@@ -16,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.content.Context.MODE_PRIVATE;
 
 public class API {
+    private final static int TIMEOUT = 15;
 
     private static <T> T builder(Class<T> endpoint) {
         Context applicationContext = WelcomeScreenActivity.getContext();
@@ -25,7 +26,7 @@ public class API {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.interceptors().add(interceptor);
-        builder.writeTimeout(15, TimeUnit.SECONDS);
+        builder.writeTimeout(TIMEOUT, TimeUnit.SECONDS);
         OkHttpClient client = builder.build();
 
         if (prefs.getBoolean("authenticated", false) ||

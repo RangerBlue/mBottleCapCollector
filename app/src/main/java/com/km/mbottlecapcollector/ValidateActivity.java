@@ -21,7 +21,7 @@ public class ValidateActivity extends Activity {
     private ImageView validateCapImage6;
     private ImageView validateCapImage7;
     private ImageView validateCapImage8;
-    String[] capURLs = new String[9];
+    private String[] capURLs = new String[9];
     private ImageView capturedImage;
     private String imageURI;
     private TextView textViewValue0_10;

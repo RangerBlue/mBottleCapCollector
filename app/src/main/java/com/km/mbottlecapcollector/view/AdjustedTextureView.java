@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.TextureView;
 
-public class AdjustedTextureView extends TextureView{
+public class AdjustedTextureView extends TextureView {
     /**
      * Value were set to ensure that presented preview is not stretched or compressed
      */

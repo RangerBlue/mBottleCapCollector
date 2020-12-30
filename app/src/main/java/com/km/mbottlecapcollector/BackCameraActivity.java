@@ -4,11 +4,12 @@ import android.graphics.Bitmap;
 import android.hardware.camera2.CameraAccessException;
 import android.os.Bundle;
 
+import com.km.mbottlecapcollector.util.FileHelper;
 import com.km.mbottlecapcollector.util.ScreenRatioHelper;
 import com.km.mbottlecapcollector.view.BackCameraOverlay;
 import com.km.mbottlecapcollector.view.CameraOverlay;
 
-public class BackCameraActivity extends CameraActivity{
+public class BackCameraActivity extends CameraActivity {
     private static final String TAG = BackCameraActivity.class.getSimpleName();
 
     @Override
@@ -39,6 +40,6 @@ public class BackCameraActivity extends CameraActivity{
 
     @Override
     public String getFileSuffix() {
-        return "cap";
+        return FileHelper.CAP_PREFIX;
     }
 }

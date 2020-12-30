@@ -10,10 +10,10 @@ import com.km.mbottlecapcollector.R;
 
 public abstract class CameraOverlay extends View {
     private Paint paint = new Paint();
-    private double circleScreenRatio = 1;
-    private double ringScreenRatio = 0.05;
-    private double sideBarScreenRatio = 0.1;
-    private double bottomBarScreenRatio = 0.2;
+    private final double CIRCLE_SCREEN_RATIO = 1;
+    private final double RING_SCREEN_RATIO = 0.05;
+    private final double SIDE_BAR_SCREEN_RATIO = 0.1;
+    private final double BOTTOM_BAR_SCREEN_RATIO = 0.2;
     private int radius;
     private int deviceWidth;
     private int deviceHeight;
@@ -24,8 +24,8 @@ public abstract class CameraOverlay extends View {
         super(context);
         this.deviceWidth = deviceWidth;
         this.deviceHeight = deviceHeight;
-        radius = (int) (getCircleScreenRatio() * deviceWidth) / 2;
-        circleCenter = new Point(deviceWidth / 2, deviceWidth / 2);
+        this.radius = (int) (getCircleScreenRatio() * deviceWidth) / 2;
+        this.circleCenter = new Point(deviceWidth / 2, deviceWidth / 2);
     }
 
     @Override
@@ -75,18 +75,18 @@ public abstract class CameraOverlay extends View {
 
 
     public double getRingScreenRatio() {
-        return ringScreenRatio;
+        return RING_SCREEN_RATIO;
     }
 
     public double getSideBarScreenRatio() {
-        return sideBarScreenRatio;
+        return SIDE_BAR_SCREEN_RATIO;
     }
 
     public double getBottomBarScreenRatio() {
-        return bottomBarScreenRatio;
+        return BOTTOM_BAR_SCREEN_RATIO;
     }
 
     public double getCircleScreenRatio() {
-        return circleScreenRatio;
+        return CIRCLE_SCREEN_RATIO;
     }
 }

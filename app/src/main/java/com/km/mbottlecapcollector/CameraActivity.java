@@ -238,16 +238,15 @@ public abstract class CameraActivity extends Activity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File fileCircle = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            final File fileCircle = new File(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                     getFileSuffix() + System.currentTimeMillis() + ".jpg");
             cameraImageRatio = imageResolution.getHeight() / (double) cameraPreviewWidth;
             ImageReader.OnImageAvailableListener readerListener =
                     new ImageReader.OnImageAvailableListener() {
                         @Override
                         public void onImageAvailable(ImageReader reader) {
-                            Image image = null;
-                            try {
-                                image = reader.acquireLatestImage();
+                            try (Image image = reader.acquireLatestImage()) {
                                 ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                                 byte[] bytes = new byte[buffer.capacity()];
                                 buffer.get(bytes);
@@ -276,10 +275,6 @@ public abstract class CameraActivity extends Activity {
                                 capturedImageURI = fileCircle.getPath();
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            } finally {
-                                if (image != null) {
-                                    image.close();
-                                }
                             }
                         }
 

@@ -19,10 +19,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FrontCameraActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".BackCameraActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".WhatCapAreYouActivity"></activity>
+        <activity
+            android:name=".FrontCameraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BackCameraActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EditActivity"
             android:screenOrientation="portrait" />
@@ -44,9 +47,21 @@
         <activity android:name=".WelcomeScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.km.mbottlecapcollector.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
     </application>
 
 </manifest>

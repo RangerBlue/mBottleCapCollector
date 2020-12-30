@@ -11,8 +11,6 @@ public class PictureWrapper implements Parcelable {
     @SerializedName("url")
     private String url;
 
-    private final int pixels = 200;
-
     public PictureWrapper(long id, String url) {
         this.id = id;
         this.url = url;
@@ -44,7 +42,7 @@ public class PictureWrapper implements Parcelable {
     }
 
     public String getUrl(int pixels) {
-        return url+ "=w" + pixels;
+        return url + "=w" + pixels;
     }
 
 

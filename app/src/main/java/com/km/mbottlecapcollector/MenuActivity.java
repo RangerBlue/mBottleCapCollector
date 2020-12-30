@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.km.mbottlecapcollector.api.model.PictureWrapper;
 import com.km.mbottlecapcollector.api.rest.API;
+import com.km.mbottlecapcollector.util.FileHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,21 +41,26 @@ public class MenuActivity extends Activity {
             progressBar.show();
             API.bottleCaps().links().enqueue(new Callback<List<PictureWrapper>>() {
                 @Override
-                public void onResponse(Call<List<PictureWrapper>> call, Response<List<PictureWrapper>> response) {
+                public void onResponse(Call<List<PictureWrapper>> call,
+                                       Response<List<PictureWrapper>> response) {
                     progressBar.dismiss();
                     if (response.code() == 401) {
-                        Toast.makeText(getApplicationContext(), "You are not allowed to perform" +
-                                "this action ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                getApplicationContext(),
+                                getText(R.string.action_not_allowed),
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         goToGalleryActivity(response);
                     }
-
                 }
 
                 @Override
                 public void onFailure(Call<List<PictureWrapper>> call, Throwable t) {
                     progressBar.dismiss();
-                    Toast.makeText(getApplicationContext(), getText(R.string.failure) +" "+ t, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            getText(R.string.failure) + " " + t,
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -74,6 +80,8 @@ public class MenuActivity extends Activity {
         progressBar.setMessage(getString(R.string.loading_gallery));
         progressBar.setCancelable(false);
         progressBar.dismiss();
+
+        FileHelper.deleteFilesInPictureFolder(getApplicationContext());
     }
 
     @Override
@@ -94,7 +102,8 @@ public class MenuActivity extends Activity {
 
     private void goToGalleryActivity(Response<List<PictureWrapper>> response) {
         Intent intent = new Intent(this, GalleryActivity.class);
-        intent.putParcelableArrayListExtra("caps", (ArrayList<? extends Parcelable>) response.body());
+        intent.putParcelableArrayListExtra("caps",
+                (ArrayList<? extends Parcelable>) response.body());
         startActivity(intent);
     }
 

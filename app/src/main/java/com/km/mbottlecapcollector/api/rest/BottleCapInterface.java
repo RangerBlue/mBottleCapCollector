@@ -47,4 +47,8 @@ public interface BottleCapInterface {
     @Multipart
     @POST("/validateCap")
     Call<ValidateCapResponse> validateCap(@Part("name") RequestBody name, @Part MultipartBody.Part image);
+
+    @Multipart
+    @POST("/whatCapAreYou")
+    Call<Cap> whatCapAreYou(@Part("name") RequestBody name, @Part MultipartBody.Part image);
 }

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.km.mbottlecapcollector.api.model.Cap;
 import com.km.mbottlecapcollector.api.model.ValidateCapResponse;
 import com.km.mbottlecapcollector.api.rest.API;
 import com.km.mbottlecapcollector.util.ScreenRatioHelper;
@@ -20,6 +21,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChoiceActivity extends Activity {
@@ -36,7 +38,7 @@ public class ChoiceActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
         String className = getIntent().getStringExtra("className");
-        goToValidateScreen = goToValidateScreen(className);
+        goToValidateScreen = allowToGoToValidateScreen(className);
         retryButton = findViewById(R.id.buttonRetry);
         retryButton.setOnClickListener(view -> {
             try {
@@ -60,25 +62,37 @@ public class ChoiceActivity extends Activity {
                     image.getName());
 
 
-            if(goToValidateScreen){
+            if (goToValidateScreen) {
                 API.bottleCaps().validateCap(name, body).enqueue(new retrofit2.Callback<ValidateCapResponse>() {
 
                     @Override
                     public void onResponse(Call<ValidateCapResponse> call, Response<ValidateCapResponse> response) {
                         progressBar.dismiss();
-                        Toast.makeText(getApplicationContext(), "Downloading results... ", Toast.LENGTH_SHORT).show();
                         goToValidateActivity(response.body());
                     }
 
                     @Override
                     public void onFailure(Call<ValidateCapResponse> call, Throwable t) {
                         progressBar.dismiss();
-                        Toast.makeText(getApplicationContext(), "Try again! " + t.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getText(R.string.try_again) +
+                                " " + t.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                progressBar.dismiss();
-                Toast.makeText(getApplicationContext(), "What cap you are", Toast.LENGTH_SHORT).show();
+                API.bottleCaps().whatCapAreYou(name, body).enqueue(new Callback<Cap>() {
+                    @Override
+                    public void onResponse(Call<Cap> call, Response<Cap> response) {
+                        progressBar.dismiss();
+                        goToWhatCapYouAreActivity(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Cap> call, Throwable t) {
+                        progressBar.dismiss();
+                        Toast.makeText(getApplicationContext(), getText(R.string.try_again) +
+                                " " + t.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
         });
@@ -100,22 +114,30 @@ public class ChoiceActivity extends Activity {
         ArrayList<String> urls = response.getSimilarCapsURLss();
         int pixels = ScreenRatioHelper.getValidateCapWidth();
         intent.putExtra("cap0", ValidateCapResponse.getLinkWithPixels(urls.get(0), pixels));
-        intent.putExtra("cap1", ValidateCapResponse.getLinkWithPixels(urls.get(1),pixels));
+        intent.putExtra("cap1", ValidateCapResponse.getLinkWithPixels(urls.get(1), pixels));
         intent.putExtra("cap2", ValidateCapResponse.getLinkWithPixels(urls.get(2), pixels));
-        intent.putExtra("cap3", ValidateCapResponse.getLinkWithPixels(urls.get(3),pixels));
-        intent.putExtra("cap4", ValidateCapResponse.getLinkWithPixels(urls.get(4),pixels));
-        intent.putExtra("cap5", ValidateCapResponse.getLinkWithPixels(urls.get(5),pixels));
-        intent.putExtra("cap6", ValidateCapResponse.getLinkWithPixels(urls.get(6),pixels));
-        intent.putExtra("cap7", ValidateCapResponse.getLinkWithPixels(urls.get(7),pixels));
-        intent.putExtra("cap8", ValidateCapResponse.getLinkWithPixels(urls.get(8),pixels));
+        intent.putExtra("cap3", ValidateCapResponse.getLinkWithPixels(urls.get(3), pixels));
+        intent.putExtra("cap4", ValidateCapResponse.getLinkWithPixels(urls.get(4), pixels));
+        intent.putExtra("cap5", ValidateCapResponse.getLinkWithPixels(urls.get(5), pixels));
+        intent.putExtra("cap6", ValidateCapResponse.getLinkWithPixels(urls.get(6), pixels));
+        intent.putExtra("cap7", ValidateCapResponse.getLinkWithPixels(urls.get(7), pixels));
+        intent.putExtra("cap8", ValidateCapResponse.getLinkWithPixels(urls.get(8), pixels));
         intent.putExtra("duplicate", response.isDuplicate());
         intent.putExtra("uri", imageURI);
         intent.putExtra("distribution", response.getSimilarityDistribution());
         startActivity(intent);
     }
 
-    private boolean goToValidateScreen(String className){
-        if(className.equals(FrontCameraActivity.class.getName())){
+    private void goToWhatCapYouAreActivity(Cap response) {
+        Intent intent = new Intent(this, WhatCapAreYouActivity.class);
+        intent.putExtra("uri", imageURI);
+        intent.putExtra("capURL",
+                response.getFileLocation(ScreenRatioHelper.getWhatCapAreYouCapWidth()));
+        startActivity(intent);
+    }
+
+    private boolean allowToGoToValidateScreen(String className) {
+        if (className.equals(FrontCameraActivity.class.getName())) {
             return false;
         }
         return true;
