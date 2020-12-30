@@ -12,6 +12,11 @@ import com.squareup.picasso.Picasso;
 
 public abstract class CapActivity extends Activity {
     private static final String TAG = ReadCapActivity.class.getSimpleName();
+    public static final String EXTRA_ID = "bcc.ID";
+    public static final String EXTRA_URL = "bcc.URL";
+    public static final String EXTRA_CAP_NAME = "bcc.CAP_NAME";
+    public static final String EXTRA_GOOGLE_DRIVE_NAME = "bcc.GOOGLE_DRIVE_NAME";
+    public static final String EXTRA_CREATION_DATE= "bcc.CREATION_DATE";
     public ImageView imageViewCapPicture;
     public TextView textViewEditCapName;
     public TextView textViewGoogleDriveName;
@@ -31,12 +36,12 @@ public abstract class CapActivity extends Activity {
     }
 
     public final void initializeData() {
-        url = getIntent().getStringExtra("url");
+        url = getIntent().getStringExtra(EXTRA_URL);
         Picasso.get().load(url).into(imageViewCapPicture);
-        textViewEditCapName.setText(getIntent().getStringExtra("capName"));
-        textViewGoogleDriveName.setText(getIntent().getStringExtra("googleDriveName"));
-        textViewCreationDate.setText(getIntent().getStringExtra("creationDate"));
-        capID = getIntent().getLongExtra("id", 0);
+        textViewEditCapName.setText(getIntent().getStringExtra(EXTRA_CAP_NAME));
+        textViewGoogleDriveName.setText(getIntent().getStringExtra(EXTRA_GOOGLE_DRIVE_NAME));
+        textViewCreationDate.setText(getIntent().getStringExtra(EXTRA_CREATION_DATE));
+        capID = getIntent().getLongExtra(EXTRA_ID, 0);
     }
 
     public final void goToMenuActivity() {
@@ -51,16 +56,16 @@ public abstract class CapActivity extends Activity {
     public abstract void initializeCapNameField();
 
     public static void putValuesForCapIntent(Intent intent, Cap cap) {
-        intent.putExtra("id", cap.getId());
-        intent.putExtra("url", cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
-        intent.putExtra("capName", cap.getCapName());
-        intent.putExtra("googleDriveName", cap.getGoogleDriveID());
-        intent.putExtra("creationDate", cap.getCreationDate());
+        intent.putExtra(EXTRA_ID, cap.getId());
+        intent.putExtra(EXTRA_URL, cap.getFileLocation(ScreenRatioHelper.getStandaloneCapWidth()));
+        intent.putExtra(EXTRA_CAP_NAME, cap.getCapName());
+        intent.putExtra(EXTRA_GOOGLE_DRIVE_NAME, cap.getGoogleDriveID());
+        intent.putExtra(EXTRA_CREATION_DATE, cap.getCreationDate());
     }
 
     public static void putValuesForCapIntent(Intent intent, long id, String url, String capName,
                                              String googleDriveName, String creationDate) {
         putValuesForCapIntent(intent, new Cap(id, url, googleDriveName, capName, creationDate));
-        intent.putExtra("url", url);
+        intent.putExtra(EXTRA_URL, url);
     }
 }

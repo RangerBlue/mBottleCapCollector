@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.km.mbottlecapcollector.CapActivity;
 import com.km.mbottlecapcollector.R;
 import com.km.mbottlecapcollector.ReadCapActivity;
 import com.km.mbottlecapcollector.api.model.Cap;
@@ -71,12 +72,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                             Cap cap = response.body();
                             Intent intent = new Intent(view.getContext().getApplicationContext(),
                                     ReadCapActivity.class);
-                            intent.putExtra("id", cap.getId());
-                            intent.putExtra("url", cap.getFileLocation(
-                                    ScreenRatioHelper.getStandaloneCapWidth()));
-                            intent.putExtra("capName", cap.getCapName());
-                            intent.putExtra("googleDriveName", cap.getGoogleDriveID());
-                            intent.putExtra("creationDate", cap.getCreationDate());
+                            CapActivity.putValuesForCapIntent(intent, cap);
                             view.getContext().startActivity(intent);
                         } else if (responseCode == 404) {
                             Toast.makeText(view.getContext(), view.getContext().

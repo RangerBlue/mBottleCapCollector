@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 public class ValidateActivity extends Activity {
-
     private ImageView validateCapImage0;
     private ImageView validateCapImage1;
     private ImageView validateCapImage2;
@@ -82,18 +81,18 @@ public class ValidateActivity extends Activity {
 
     private void initializeData() {
         Intent intent = getIntent();
-        capURLs[0] = intent.getStringExtra("cap0");
-        capURLs[1] = intent.getStringExtra("cap1");
-        capURLs[2] = intent.getStringExtra("cap2");
-        capURLs[3] = intent.getStringExtra("cap3");
-        capURLs[4] = intent.getStringExtra("cap4");
-        capURLs[5] = intent.getStringExtra("cap5");
-        capURLs[6] = intent.getStringExtra("cap6");
-        capURLs[7] = intent.getStringExtra("cap7");
-        capURLs[8] = intent.getStringExtra("cap8");
+        capURLs[0] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_0);
+        capURLs[1] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_1);
+        capURLs[2] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_2);
+        capURLs[3] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_3);
+        capURLs[4] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_4);
+        capURLs[5] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_5);
+        capURLs[6] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_6);
+        capURLs[7] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_7);
+        capURLs[8] = intent.getStringExtra(ChoiceActivity.EXTRA_CAP_8);
 
-        imageURI = intent.getStringExtra("uri");
-        int[] distribution = intent.getIntArrayExtra("distribution");
+        imageURI = intent.getStringExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI);
+        int[] distribution = intent.getIntArrayExtra(ChoiceActivity.EXTRA_DISTRIBUTION);
         textViewValue0_10.setText(String.valueOf(distribution[0]));
         textViewValue10_20.setText(String.valueOf(distribution[1]));
         textViewValue20_30.setText(String.valueOf(distribution[2]));
@@ -121,7 +120,7 @@ public class ValidateActivity extends Activity {
 
     private void goToSaveActivity() {
         Intent intent = new Intent(this, SaveActivity.class);
-        intent.putExtra("uri", imageURI);
+        intent.putExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI, imageURI);
         startActivity(intent);
     }
 

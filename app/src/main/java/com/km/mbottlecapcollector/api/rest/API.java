@@ -3,6 +3,7 @@ package com.km.mbottlecapcollector.api.rest;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.km.mbottlecapcollector.R;
 import com.km.mbottlecapcollector.WelcomeScreenActivity;
 import com.km.mbottlecapcollector.api.config.Config;
 
@@ -21,16 +22,17 @@ public class API {
     private static <T> T builder(Class<T> endpoint) {
         Context applicationContext = WelcomeScreenActivity.getContext();
         SharedPreferences prefs = applicationContext.getSharedPreferences("UserData", MODE_PRIVATE);
-        BasicAuthInterceptor interceptor = new BasicAuthInterceptor(prefs.getString("login", ""),
-                prefs.getString("password", ""));
+        BasicAuthInterceptor interceptor = new BasicAuthInterceptor(
+                prefs.getString(applicationContext.getString(R.string.login_key), ""),
+                prefs.getString(applicationContext.getString(R.string.locked_day_key), ""));
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.interceptors().add(interceptor);
         builder.writeTimeout(TIMEOUT, TimeUnit.SECONDS);
         OkHttpClient client = builder.build();
 
-        if (prefs.getBoolean("authenticated", false) ||
-                prefs.getBoolean("logging", false)) {
+        if (prefs.getBoolean(applicationContext.getString(R.string.authenticated_key), false) ||
+                prefs.getBoolean(applicationContext.getString(R.string.logging_key), false)) {
             return new Retrofit.Builder()
                     .baseUrl(Config.API_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())

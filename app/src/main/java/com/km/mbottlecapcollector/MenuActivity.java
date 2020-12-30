@@ -20,7 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MenuActivity extends Activity {
-
+    public static final String EXTRA_CAPS = "bcc.CAPS";
     private Button checkButton;
     private Button viewButton;
     private Button adminButton;
@@ -91,7 +91,6 @@ public class MenuActivity extends Activity {
 
     private void goToCameraActivity() {
         Intent intent = new Intent(this, BackCameraActivity.class);
-        intent.putExtra("isFrontCamera", true);
         startActivity(intent);
     }
 
@@ -102,7 +101,7 @@ public class MenuActivity extends Activity {
 
     private void goToGalleryActivity(Response<List<PictureWrapper>> response) {
         Intent intent = new Intent(this, GalleryActivity.class);
-        intent.putParcelableArrayListExtra("caps",
+        intent.putParcelableArrayListExtra(EXTRA_CAPS,
                 (ArrayList<? extends Parcelable>) response.body());
         startActivity(intent);
     }

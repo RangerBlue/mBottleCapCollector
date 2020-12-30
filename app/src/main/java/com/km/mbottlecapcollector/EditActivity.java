@@ -67,6 +67,9 @@ public class EditActivity extends CapActivity {
                 }
             });
         });
+        buttonLeft.setOnClickListener(view -> {
+            this.onBackPressed();
+        });
 
         progressBar = new ProgressDialog(this);
         progressBar.setTitle(R.string.loading);

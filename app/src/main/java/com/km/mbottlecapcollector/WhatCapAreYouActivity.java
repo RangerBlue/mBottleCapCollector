@@ -1,13 +1,10 @@
 package com.km.mbottlecapcollector;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +45,8 @@ public class WhatCapAreYouActivity extends Activity {
             FileHelper.shareImage(file, getApplicationContext());
         });
 
-        String imageURI = getIntent().getStringExtra("uri");
-        String imageURL = getIntent().getStringExtra("capURL");
+        String imageURI = getIntent().getStringExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI);
+        String imageURL = getIntent().getStringExtra(ChoiceActivity.EXTRA_CAP_URL);
         File image = new File(imageURI);
         Picasso.get().load(image).resize(ScreenRatioHelper.getWhatCapAreYouCapWidth(),
                 ScreenRatioHelper.getWhatCapAreYouCapWidth()).into(imageViewYou);

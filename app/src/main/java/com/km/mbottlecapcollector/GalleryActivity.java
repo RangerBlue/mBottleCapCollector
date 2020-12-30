@@ -44,7 +44,7 @@ public class GalleryActivity extends Activity {
         currentPageTextView = findViewById(R.id.textViewCurrentPage);
         currentPageTextView.setText(String.valueOf(currentPage + 1));
         lastPageTextView = findViewById(R.id.textViewLastPage);
-        capList = getIntent().getParcelableArrayListExtra("caps");
+        capList = getIntent().getParcelableArrayListExtra(MenuActivity.EXTRA_CAPS);
         capList.sort((cap1, cap2) -> (int) (cap1.getId() - cap2.getId()));
 
         numberOfRows = ScreenRatioHelper.getNumberOfRows();

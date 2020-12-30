@@ -25,6 +25,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChoiceActivity extends Activity {
+    public static final String EXTRA_CAP_URL = "bcc.CAP_URL";
+    public static final String EXTRA_DISTRIBUTION = "bcc.DISTRIBUTION";
+    public static final String EXTRA_CAP_0 = "bcc.CAP_0";
+    public static final String EXTRA_CAP_1 = "bcc.CAP_1";
+    public static final String EXTRA_CAP_2 = "bcc.CAP_2";
+    public static final String EXTRA_CAP_3 = "bcc.CAP_3";
+    public static final String EXTRA_CAP_4 = "bcc.CAP_4";
+    public static final String EXTRA_CAP_5 = "bcc.CAP_5";
+    public static final String EXTRA_CAP_6 = "bcc.CAP_6";
+    public static final String EXTRA_CAP_7 = "bcc.CAP_7";
+    public static final String EXTRA_CAP_8 = "bcc.CAP_8";
     private ImageView imageView;
     private String imageURI;
     private Button retryButton;
@@ -37,7 +48,7 @@ public class ChoiceActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
-        String className = getIntent().getStringExtra("className");
+        String className = getIntent().getStringExtra(CameraActivity.EXTRA_CLASS_NAME);
         goToValidateScreen = allowToGoToValidateScreen(className);
         retryButton = findViewById(R.id.buttonRetry);
         retryButton.setOnClickListener(view -> {
@@ -98,7 +109,7 @@ public class ChoiceActivity extends Activity {
         });
 
         imageView = findViewById(R.id.capImage);
-        imageURI = getIntent().getStringExtra("URI");
+        imageURI = getIntent().getStringExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI);
         image = new File(imageURI);
         Picasso.get().load(image).into(imageView);
 
@@ -113,25 +124,24 @@ public class ChoiceActivity extends Activity {
         Intent intent = new Intent(this, ValidateActivity.class);
         ArrayList<String> urls = response.getSimilarCapsURLss();
         int pixels = ScreenRatioHelper.getValidateCapWidth();
-        intent.putExtra("cap0", ValidateCapResponse.getLinkWithPixels(urls.get(0), pixels));
-        intent.putExtra("cap1", ValidateCapResponse.getLinkWithPixels(urls.get(1), pixels));
-        intent.putExtra("cap2", ValidateCapResponse.getLinkWithPixels(urls.get(2), pixels));
-        intent.putExtra("cap3", ValidateCapResponse.getLinkWithPixels(urls.get(3), pixels));
-        intent.putExtra("cap4", ValidateCapResponse.getLinkWithPixels(urls.get(4), pixels));
-        intent.putExtra("cap5", ValidateCapResponse.getLinkWithPixels(urls.get(5), pixels));
-        intent.putExtra("cap6", ValidateCapResponse.getLinkWithPixels(urls.get(6), pixels));
-        intent.putExtra("cap7", ValidateCapResponse.getLinkWithPixels(urls.get(7), pixels));
-        intent.putExtra("cap8", ValidateCapResponse.getLinkWithPixels(urls.get(8), pixels));
-        intent.putExtra("duplicate", response.isDuplicate());
-        intent.putExtra("uri", imageURI);
-        intent.putExtra("distribution", response.getSimilarityDistribution());
+        intent.putExtra(EXTRA_CAP_0, ValidateCapResponse.getLinkWithPixels(urls.get(0), pixels));
+        intent.putExtra(EXTRA_CAP_1, ValidateCapResponse.getLinkWithPixels(urls.get(1), pixels));
+        intent.putExtra(EXTRA_CAP_2, ValidateCapResponse.getLinkWithPixels(urls.get(2), pixels));
+        intent.putExtra(EXTRA_CAP_3, ValidateCapResponse.getLinkWithPixels(urls.get(3), pixels));
+        intent.putExtra(EXTRA_CAP_4, ValidateCapResponse.getLinkWithPixels(urls.get(4), pixels));
+        intent.putExtra(EXTRA_CAP_5, ValidateCapResponse.getLinkWithPixels(urls.get(5), pixels));
+        intent.putExtra(EXTRA_CAP_6, ValidateCapResponse.getLinkWithPixels(urls.get(6), pixels));
+        intent.putExtra(EXTRA_CAP_7, ValidateCapResponse.getLinkWithPixels(urls.get(7), pixels));
+        intent.putExtra(EXTRA_CAP_8, ValidateCapResponse.getLinkWithPixels(urls.get(8), pixels));
+        intent.putExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI, imageURI);
+        intent.putExtra(EXTRA_DISTRIBUTION, response.getSimilarityDistribution());
         startActivity(intent);
     }
 
     private void goToWhatCapYouAreActivity(Cap response) {
         Intent intent = new Intent(this, WhatCapAreYouActivity.class);
-        intent.putExtra("uri", imageURI);
-        intent.putExtra("capURL",
+        intent.putExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI, imageURI);
+        intent.putExtra(EXTRA_CAP_URL,
                 response.getFileLocation(ScreenRatioHelper.getWhatCapAreYouCapWidth()));
         startActivity(intent);
     }

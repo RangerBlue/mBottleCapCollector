@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mBottleCapCollector</string>
+    <string name="app_name">BottleCap Collector</string>
     <string name="go_to_camera">Go to camera</string>
     <string name="take_picture">Take picture</string>
     <string name="app_name_logo">BOTTLE CAP COLLECTOR</string>
@@ -44,7 +44,7 @@
     <string name="cancel">CANCEL</string>
     <string name="update">UPDATE</string>
     <string name="loading">Loading</string>
-    <string name="loading_cap">Cap is loading</string>
+    <string name="loading_cap">Cap is loading...</string>
     <string name="loading_picture">Processing picture...</string>
     <string name="validating_picture">Validating picture...</string>
     <string name="saving_cap">Saving cap...</string>
@@ -79,4 +79,9 @@
     <string name="unexpected_exception">"Unexpected exception: "</string>
     <string name="successfully_deleted_cap">Successfully deleted cap</string>
     <string name="exception_disc">Exception during removing from disc</string>
+    <string name="login_key">login_key</string>
+    <string name="authenticated_key">authenticated_key</string>
+    <string name="logging_key">logging_key</string>
+    <string name="locked_day_key">locked_day_key</string>
+    <string name="password_key">password_key</string>
 </resources>

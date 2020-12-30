@@ -11,7 +11,6 @@ import com.km.mbottlecapcollector.view.CameraOverlay;
 import com.km.mbottlecapcollector.view.FrontCameraOverlay;
 
 public class FrontCameraActivity extends CameraActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

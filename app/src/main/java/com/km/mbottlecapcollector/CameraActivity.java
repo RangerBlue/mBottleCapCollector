@@ -63,8 +63,9 @@ import static com.km.mbottlecapcollector.util.ScreenRatioHelper.FULL_HD_WIDTH;
 import static com.km.mbottlecapcollector.util.ScreenRatioHelper.IMAGE_RATIO;
 
 public abstract class CameraActivity extends Activity {
-
     private static final String TAG = CameraActivity.class.getSimpleName();
+    public static final String EXTRA_CAPTURED_IMAGE_URI = "bcc.URI";
+    public static final String EXTRA_CLASS_NAME = "bcc_NAME";
     private Button takePictureButton;
     private AdjustedTextureView textureView;
     private RelativeLayout rootLayout;
@@ -501,8 +502,8 @@ public abstract class CameraActivity extends Activity {
 
     private void goToChoiceActivity() {
         Intent intent = new Intent(this, ChoiceActivity.class);
-        intent.putExtra("URI", capturedImageURI);
-        intent.putExtra("className", getClass().getName());
+        intent.putExtra(EXTRA_CAPTURED_IMAGE_URI, capturedImageURI);
+        intent.putExtra(EXTRA_CLASS_NAME, getClass().getName());
         startActivity(intent);
     }
 

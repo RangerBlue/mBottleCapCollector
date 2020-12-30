@@ -35,7 +35,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        prefs = getSharedPreferences("UserData", MODE_PRIVATE);
+        prefs = getSharedPreferences(WelcomeScreenActivity.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         textViewLogin = findViewById(R.id.textViewUsername);
         editTextLogin = findViewById(R.id.editTextUsername);
 
@@ -48,9 +48,9 @@ public class LoginActivity extends Activity {
             SharedPreferences.Editor editor = prefs.edit();
             if (isAuthenticated()) {
                 progressBar.dismiss();
-                editor.putBoolean("authenticated", false);
-                editor.putString("login", "");
-                editor.putString("password", "");
+                editor.putBoolean(getString(R.string.authenticated_key), false);
+                editor.putString(getString(R.string.login_key), "");
+                editor.putString(getString(R.string.locked_day_key), "");
                 editor.commit();
                 switchPage();
             } else {
@@ -58,9 +58,13 @@ public class LoginActivity extends Activity {
                         (editTextLogin.getText().toString().length() != 0)) {
 
 
-                    editor.putString("login", editTextLogin.getText().toString().trim());
-                    editor.putString("password", editTextPassword.getText().toString().trim());
-                    editor.putBoolean("logging", true);
+                    editor.putString(
+                            getString(R.string.login_key),
+                            editTextLogin.getText().toString().trim());
+                    editor.putString(
+                            getString(R.string.locked_day_key),
+                            editTextPassword.getText().toString().trim());
+                    editor.putBoolean(getString(R.string.logging_key), true);
                     editor.commit();
 
                     API.bottleCaps().info().enqueue(new Callback<ResponseBody>() {
@@ -72,8 +76,8 @@ public class LoginActivity extends Activity {
                                         getApplicationContext(),
                                         getText(R.string.logged_in),
                                         Toast.LENGTH_SHORT).show();
-                                editor.putBoolean("authenticated", true);
-                                editor.putBoolean("logging", false);
+                                editor.putBoolean(getString(R.string.authenticated_key), true);
+                                editor.putBoolean(getString(R.string.logging_key), false);
                                 editor.commit();
                                 switchPage();
                             }
@@ -84,12 +88,12 @@ public class LoginActivity extends Activity {
                                         getText(R.string.wrong_credentials),
                                         Toast.LENGTH_SHORT).show();
                                 editor.putBoolean("authenticated", false);
-                                editor.putBoolean("logging", false);
+                                editor.putBoolean(getString(R.string.logging_key), false);
                                 editor.commit();
                                 attemptCounter++;
                                 if (attemptCounter == maxAttemptsCounter) {
                                     editor.putInt(
-                                            "lockedDay",
+                                            getString(R.string.locked_day_key),
                                             Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                                     editor.commit();
                                     Toast.makeText(
@@ -135,7 +139,7 @@ public class LoginActivity extends Activity {
 
     private void switchPage() {
         if (isAuthenticated()) {
-            textViewLogin.setText(prefs.getString("login", "user"));
+            textViewLogin.setText(prefs.getString(getString(R.string.login_key), "user"));
             editTextLogin.setVisibility(View.INVISIBLE);
             textViewPasswordOrState.setText(R.string.logged);
             editTextPassword.setVisibility(View.INVISIBLE);
@@ -153,12 +157,12 @@ public class LoginActivity extends Activity {
     }
 
     private boolean isAuthenticated() {
-        return prefs.getBoolean("authenticated", false);
+        return prefs.getBoolean(getString(R.string.authenticated_key), false);
     }
 
     private boolean isLocked() {
         int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        int lockedDay = prefs.getInt("lockedDay", -1);
+        int lockedDay = prefs.getInt(getString(R.string.locked_day_key), -1);
         return lockedDay == currentDay;
     }
 }

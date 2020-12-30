@@ -20,6 +20,7 @@ import java.util.Date;
 
 public class WelcomeScreenActivity extends Activity {
     private static final String TAG = WelcomeScreenActivity.class.getSimpleName();
+    public static String SHARED_PREFERENCES_NAME = "UserData";
     private Handler handler;
     private final int DELAY_IN_SECONDS_WELCOME = 2;
     private final int DELAY_IN_SECONDS_WORKING_HOURS = 5;
@@ -37,7 +38,8 @@ public class WelcomeScreenActivity extends Activity {
         context = getApplicationContext();
         setContentView(R.layout.activity_welcome);
         welcomeText = findViewById(R.id.textViewWelcome);
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences("UserData", MODE_PRIVATE);
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         hasDeviceInternetConnection();
 
         builder = new AlertDialog.Builder(this);
@@ -74,7 +76,7 @@ public class WelcomeScreenActivity extends Activity {
             }
 
         } else {
-            if (prefs.getBoolean("authenticated", false)) {
+            if (prefs.getBoolean(getString(R.string.authenticated_key), false)) {
                 alert = builder.create();
                 alert.show();
             } else {

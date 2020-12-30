@@ -33,7 +33,6 @@ public class SaveActivity extends Activity {
     private File image;
     private ProgressDialog progressBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,16 +50,17 @@ public class SaveActivity extends Activity {
             API.bottleCaps().addCap(name, body).enqueue(new Callback<Long>() {
                 @Override
                 public void onResponse(Call<Long> call, Response<Long> response) {
-                    if(response.code() == 201){
+                    if (response.code() == 201) {
                         goToCapActivity(response.body().longValue());
-                    }else if(response.code() == 401){
+                    } else if (response.code() == 401) {
+                        progressBar.dismiss();
                         Toast.makeText(
                                 getApplicationContext(),
                                 getText(R.string.action_not_allowed),
                                 Toast.LENGTH_SHORT).show();
-                    } else{
+                    } else {
                         Toast.makeText(
-                                getApplicationContext(), getText(R.string.try_again) + " " +response,
+                                getApplicationContext(), getText(R.string.try_again) + " " + response,
                                 Toast.LENGTH_SHORT).show();
                     }
 
@@ -79,7 +79,7 @@ public class SaveActivity extends Activity {
         });
         buttonSave.setEnabled(false);
 
-        imageURI = getIntent().getStringExtra("uri");
+        imageURI = getIntent().getStringExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI);
         image = new File(imageURI);
         imageViewCap.setImageDrawable(Drawable.createFromPath(imageURI));
 
@@ -115,6 +115,7 @@ public class SaveActivity extends Activity {
         API.bottleCaps().cap(id).enqueue(new Callback<Cap>() {
             @Override
             public void onResponse(Call<Cap> call, Response<Cap> response) {
+                progressBar.dismiss();
                 Cap cap = response.body();
                 Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
                 CapActivity.putValuesForCapIntent(intent, cap);
@@ -124,6 +125,7 @@ public class SaveActivity extends Activity {
 
             @Override
             public void onFailure(Call<Cap> call, Throwable t) {
+                progressBar.dismiss();
                 Toast.makeText(
                         getApplicationContext(),
                         getText(R.string.failure) +" "+ t,
