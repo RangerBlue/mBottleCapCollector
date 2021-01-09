@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
                 progressBar.dismiss();
                 editor.putBoolean(getString(R.string.authenticated_key), false);
                 editor.putString(getString(R.string.login_key), "");
-                editor.putString(getString(R.string.locked_day_key), "");
+                editor.putString(getString(R.string.password_key), "");
                 editor.commit();
                 switchPage();
             } else {
@@ -62,7 +62,7 @@ public class LoginActivity extends Activity {
                             getString(R.string.login_key),
                             editTextLogin.getText().toString().trim());
                     editor.putString(
-                            getString(R.string.locked_day_key),
+                            getString(R.string.password_key),
                             editTextPassword.getText().toString().trim());
                     editor.putBoolean(getString(R.string.logging_key), true);
                     editor.commit();

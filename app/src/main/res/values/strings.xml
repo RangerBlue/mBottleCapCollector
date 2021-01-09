@@ -39,7 +39,6 @@
     <string name="confirm">Confirm</string>
     <string name="do_you_really_want_to_delete_this_cap">Do you really want to delete this cap?</string>
     <string name="no">NO</string>
-    <string name="google_drive_id">GOOGLE DRIVE ID</string>
     <string name="creation_date">CREATION DATE</string>
     <string name="cancel">CANCEL</string>
     <string name="update">UPDATE</string>
@@ -84,4 +83,5 @@
     <string name="logging_key">logging_key</string>
     <string name="locked_day_key">locked_day_key</string>
     <string name="password_key">password_key</string>
+    <string name="desc">DESCRIPTION</string>
 </resources>

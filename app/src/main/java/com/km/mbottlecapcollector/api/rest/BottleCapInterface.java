@@ -26,14 +26,16 @@ public interface BottleCapInterface {
 
     @Multipart
     @POST("/caps/")
-    Call<Long> addCap(@Part("name") RequestBody name, @Part MultipartBody.Part image);
+    Call<Long> addCap(@Part("name") RequestBody name,  @Part("desc") RequestBody desc,
+                      @Part MultipartBody.Part image);
 
     @DELETE("/caps/{id}")
     Call<ResponseBody> deleteCap(@Path("id") long id);
 
     @FormUrlEncoded
     @PUT("/caps/{id}")
-    Call<Cap> updateCap(@Path("id") long id, @Field("newName") String newName);
+    Call<Cap> updateCap(@Path("id") long id, @Field("newName") String newName,
+                        @Field("newDesc") String newDesc);
 
     @GET("/links")
     Call<List<PictureWrapper>> links();
@@ -46,7 +48,8 @@ public interface BottleCapInterface {
 
     @Multipart
     @POST("/validateCap")
-    Call<ValidateCapResponse> validateCap(@Part("name") RequestBody name, @Part MultipartBody.Part image);
+    Call<ValidateCapResponse> validateCap(@Part("name") RequestBody name,
+                                          @Part MultipartBody.Part image);
 
     @Multipart
     @POST("/whatCapAreYou")

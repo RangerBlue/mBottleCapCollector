@@ -28,6 +28,7 @@ import retrofit2.Response;
 public class SaveActivity extends Activity {
     private ImageView imageViewCap;
     private EditText editTextCapName;
+    private EditText editTextDescription;
     private Button buttonSave;
     private String imageURI;
     private File image;
@@ -39,6 +40,7 @@ public class SaveActivity extends Activity {
         setContentView(R.layout.activity_save);
         imageViewCap = findViewById(R.id.savedCapImage);
         editTextCapName = findViewById(R.id.editTextCapName);
+        editTextDescription = findViewById(R.id.editTextDescription);
         buttonSave = findViewById(R.id.buttonSaveCap);
         buttonSave.setOnClickListener(view -> {
             progressBar.show();
@@ -47,7 +49,10 @@ public class SaveActivity extends Activity {
                     MultipartBody.Part.createFormData("file", image.getName(), requestFile);
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"),
                     editTextCapName.getText().toString());
-            API.bottleCaps().addCap(name, body).enqueue(new Callback<Long>() {
+            RequestBody desc = RequestBody.create(MediaType.parse("text/plain"),
+                    editTextDescription.getText().toString());
+
+            API.bottleCaps().addCap(name, desc, body).enqueue(new Callback<Long>() {
                 @Override
                 public void onResponse(Call<Long> call, Response<Long> response) {
                     if (response.code() == 201) {
@@ -84,6 +89,27 @@ public class SaveActivity extends Activity {
         imageViewCap.setImageDrawable(Drawable.createFromPath(imageURI));
 
         editTextCapName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.toString().trim().length() == 0){
+                    buttonSave.setEnabled(false);
+                } else {
+                    buttonSave.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        editTextDescription.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 

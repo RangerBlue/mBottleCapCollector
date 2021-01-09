@@ -12,8 +12,8 @@ public class Cap implements Parcelable {
     @SerializedName("fileLocation")
     private String fileLocation;
 
-    @SerializedName("googleDriveID")
-    private String googleDriveID;
+    @SerializedName("description")
+    private String description;
 
     @SerializedName("capName")
     private String capName;
@@ -24,7 +24,7 @@ public class Cap implements Parcelable {
     public Cap(long id, String fileLocation, String googleDriveID, String capName, String creationDate) {
         this.id = id;
         this.fileLocation = fileLocation;
-        this.googleDriveID = googleDriveID;
+        this.description = googleDriveID;
         this.capName = capName;
         this.creationDate = creationDate;
     }
@@ -32,7 +32,7 @@ public class Cap implements Parcelable {
     protected Cap(Parcel in) {
         id = in.readInt();
         fileLocation = in.readString();
-        googleDriveID = in.readString();
+        description = in.readString();
         capName = in.readString();
         creationDate = in.readString();
     }
@@ -72,12 +72,12 @@ public class Cap implements Parcelable {
         this.fileLocation = fileLocation;
     }
 
-    public String getGoogleDriveID() {
-        return googleDriveID;
+    public String getDescription() {
+        return description;
     }
 
-    public void setGoogleDriveID(String googleDriveID) {
-        this.googleDriveID = googleDriveID;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCapName() {
@@ -105,7 +105,7 @@ public class Cap implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeLong(id);
         parcel.writeString(fileLocation);
-        parcel.writeString(googleDriveID);
+        parcel.writeString(description);
         parcel.writeString(capName);
         parcel.writeString(creationDate);
     }

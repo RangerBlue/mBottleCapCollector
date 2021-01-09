@@ -51,16 +51,16 @@
         android:background="@color/colorMainLayout">
 
         <TextView
-            android:id="@+id/textViewGoogleDriveNameLabel"
+            android:id="@+id/textViewDescriptionNameLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/google_drive_id"/>
+            android:text="@string/desc"/>
 
         <TextView
-            android:id="@+id/textViewGoogleDriveName"
+            android:id="@+id/textViewDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

@@ -117,14 +117,15 @@ public class ReadCapActivity extends CapActivity {
     }
 
     @Override
-    public void initializeCapNameField() {
+    public void initializeEditableFields() {
         textViewEditCapName = findViewById(R.id.textViewCapName);
+        textViewEditDescription = findViewById(R.id.textViewDescription);
     }
 
     private void goToEditActivity() {
         Intent intent = new Intent(this, EditActivity.class);
         putValuesForCapIntent(intent, capID, url, textViewEditCapName.getText().toString(),
-                textViewGoogleDriveName.getText().toString(), textViewCreationDate.getText().toString());
+                textViewEditDescription.getText().toString(), textViewCreationDate.getText().toString());
         startActivity(intent);
     }
 }

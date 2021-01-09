@@ -24,7 +24,7 @@ public class API {
         SharedPreferences prefs = applicationContext.getSharedPreferences("UserData", MODE_PRIVATE);
         BasicAuthInterceptor interceptor = new BasicAuthInterceptor(
                 prefs.getString(applicationContext.getString(R.string.login_key), ""),
-                prefs.getString(applicationContext.getString(R.string.locked_day_key), ""));
+                prefs.getString(applicationContext.getString(R.string.password_key), ""));
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.interceptors().add(interceptor);

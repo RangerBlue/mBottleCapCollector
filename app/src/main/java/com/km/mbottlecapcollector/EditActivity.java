@@ -25,6 +25,7 @@ public class EditActivity extends CapActivity {
         buttonRight.setOnClickListener(view -> {
             progressBar.show();
             API.bottleCaps().updateCap(capID, textViewEditCapName.getText().
+                    toString(), textViewEditDescription.getText().
                     toString()).enqueue(new Callback<Cap>() {
                 @Override
                 public void onResponse(Call<Cap> call, Response<Cap> response) {
@@ -89,7 +90,8 @@ public class EditActivity extends CapActivity {
     }
 
     @Override
-    public void initializeCapNameField() {
+    public void initializeEditableFields() {
         textViewEditCapName = findViewById(R.id.editTextCapName);
+        textViewEditDescription = findViewById(R.id.editTextDescription);
     }
 }
