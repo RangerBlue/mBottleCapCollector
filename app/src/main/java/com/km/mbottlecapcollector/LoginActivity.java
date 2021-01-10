@@ -144,15 +144,14 @@ public class LoginActivity extends Activity {
             textViewPasswordOrState.setText(R.string.logged);
             editTextPassword.setVisibility(View.INVISIBLE);
             buttonLoginLogout.setText(R.string.logout);
-            loggingMessage = getText(R.string.logging_out);
         } else {
             textViewLogin.setText(R.string.login);
             editTextLogin.setVisibility(View.VISIBLE);
             textViewPasswordOrState.setText(R.string.password);
             editTextPassword.setVisibility(View.VISIBLE);
             buttonLoginLogout.setText(R.string.login);
-            loggingMessage = getText(R.string.logging_in);
         }
+        loggingMessage = getText(R.string.processing);
 
     }
 

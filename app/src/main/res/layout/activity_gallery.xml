@@ -41,6 +41,17 @@
                 android:text="@string/left" />
 
             <TextView
+                android:id="@+id/textViewSort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:text="@string/string_arrow_down"
+                tools:ignore="RtlCompat" />
+
+            <TextView
                 android:id="@+id/textViewCurrentPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

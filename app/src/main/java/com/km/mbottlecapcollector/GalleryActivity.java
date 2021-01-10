@@ -26,6 +26,7 @@ public class GalleryActivity extends Activity {
     private Button previousButton;
     private TextView currentPageTextView;
     private TextView lastPageTextView;
+    private TextView sortTextView;
     private int numberOfRows;
     private int numberOfItems;
     private int currentStartNumber = 0;
@@ -34,6 +35,7 @@ public class GalleryActivity extends Activity {
     private int numberOfPages = 0;
     private int currentPage = 0;
     ProgressDialog progressBar;
+    private boolean sortedMostRecent = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,9 @@ public class GalleryActivity extends Activity {
         currentPageTextView = findViewById(R.id.textViewCurrentPage);
         currentPageTextView.setText(String.valueOf(currentPage + 1));
         lastPageTextView = findViewById(R.id.textViewLastPage);
+        sortTextView = findViewById(R.id.textViewSort);
         capList = getIntent().getParcelableArrayListExtra(MenuActivity.EXTRA_CAPS);
-        capList.sort((cap1, cap2) -> (int) (cap1.getId() - cap2.getId()));
+        sortAscending();
 
         numberOfRows = ScreenRatioHelper.getNumberOfRows();
         numberOfItems = capList.size();
@@ -58,7 +61,8 @@ public class GalleryActivity extends Activity {
         Log.i(TAG, "Number of pages :" + numberOfPages);
         Log.i(TAG, "Number of items on page :" + itemsOnPage);
         Log.i(TAG, "Number of items :" + numberOfItems);
-        layoutManager = new GridLayoutManager(getApplicationContext(), ScreenRatioHelper.CAP_IN_ROW_AMOUNT);
+        layoutManager = new GridLayoutManager(getApplicationContext(),
+                ScreenRatioHelper.CAP_IN_ROW_AMOUNT);
         recyclerView.setLayoutManager(layoutManager);
 
         progressBar = new ProgressDialog(this);
@@ -67,7 +71,8 @@ public class GalleryActivity extends Activity {
         progressBar.setCancelable(false);
         progressBar.dismiss();
 
-        GalleryAdapter adapter = new GalleryAdapter(new ArrayList<>(capList.subList(currentStartNumber, currentLastNumber)), progressBar);
+        GalleryAdapter adapter = new GalleryAdapter(new ArrayList<>(
+                capList.subList(currentStartNumber, currentLastNumber)), progressBar);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
@@ -83,6 +88,20 @@ public class GalleryActivity extends Activity {
             adapter.notifyDataSetChanged();
         });
 
+
+        sortTextView.setOnClickListener(view -> {
+            if(sortedMostRecent){
+                sortAscending();
+                sortTextView.setText(getText(R.string.string_arrow_down));
+            } else {
+                sortDescending();
+                sortTextView.setText(getText(R.string.string_arrow_up));
+            }
+            sortedMostRecent = !sortedMostRecent;
+            adapter.setGalleryList(
+                    new ArrayList<>(capList.subList(currentStartNumber, currentLastNumber)));
+            adapter.notifyDataSetChanged();
+        });
     }
 
     private ArrayList<PictureWrapper> getNextItems() {
@@ -115,5 +134,13 @@ public class GalleryActivity extends Activity {
             currentPage--;
         }
         currentPageTextView.setText(String.valueOf(currentPage + 1));
+    }
+
+    private void sortAscending(){
+        capList.sort((cap1, cap2) -> (int) (cap1.getId() - cap2.getId()));
+    };
+
+    private void sortDescending(){
+        capList.sort((cap2, cap1) -> (int) (cap1.getId() - cap2.getId()));
     }
 }

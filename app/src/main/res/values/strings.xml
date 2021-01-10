@@ -84,4 +84,7 @@
     <string name="locked_day_key">locked_day_key</string>
     <string name="password_key">password_key</string>
     <string name="desc">DESCRIPTION</string>
+    <string name="string_arrow_up">↑</string>
+    <string name="string_arrow_down">↓</string>
+    <string name="processing">Processing...</string>
 </resources>
