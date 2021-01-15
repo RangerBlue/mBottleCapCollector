@@ -26,7 +26,7 @@ public class WelcomeScreenActivity extends Activity {
     private final int DELAY_IN_SECONDS_WORKING_HOURS = 5;
     private final int DELAY_IN_SECONDS_NO_INTERNET = 3;
     public static Context context;
-    private final String FROM = "10:05";
+    private final String FROM = "07:00";
     private final String TO = "00:15";
     private AlertDialog.Builder builder;
     private AlertDialog alert;

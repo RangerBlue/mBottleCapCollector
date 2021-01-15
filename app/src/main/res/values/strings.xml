@@ -56,7 +56,7 @@
     <string name="logging_out">Logging out..</string>
     <string name="admin_override">Do you want to start application?</string>
     <string name="admin_access">Admin access entry</string>
-    <string name="outside_of_working_hours">Application is currently outside of working hours, it is not accessible between %1$S and %2$S</string>
+    <string name="outside_of_working_hours">Application is currently outside working hours, it is not accessible between %1$S and %2$S</string>
     <string name="no_internet_access">Device does not have internet access, turn on your internet connection</string>
     <string name="hello_admin">Hello admin!</string>
     <string name="loading_gallery">Loading gallery...</string>
