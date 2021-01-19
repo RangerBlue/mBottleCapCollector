@@ -87,4 +87,6 @@
     <string name="string_arrow_up">↑</string>
     <string name="string_arrow_down">↓</string>
     <string name="processing">Processing...</string>
+    <string name="rotate">ROTATE PREVIEW</string>
+    <string name="rotate_key">rotate_key</string>
 </resources>

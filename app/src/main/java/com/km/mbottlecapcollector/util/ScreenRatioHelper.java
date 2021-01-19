@@ -1,7 +1,6 @@
 package com.km.mbottlecapcollector.util;
 
 import android.content.res.Resources;
-import android.os.Build;
 
 public class ScreenRatioHelper {
     /**
@@ -53,7 +52,6 @@ public class ScreenRatioHelper {
      * Ratio of default camera preview
      */
     public static double IMAGE_RATIO = FULL_HD_WIDTH / (double) FULL_HD_HEIGHT;
-    private static String SAMSUNG_MODEL = "SM-A505FN";
 
 
     public static int getScreenWidth() {
@@ -82,17 +80,6 @@ public class ScreenRatioHelper {
 
     public static int getNumberOfRows() {
         return (int) (getScreenHeight() * CAP_GALLERY_HEIGHT_RATIO / getCapInRowWidth());
-    }
-
-    /**
-     * Workaround for certain models of Samsung where images are rotated after being taken, list of
-     * model could be updated. Exif could not be used as we are not storing image bitmap to device
-     * memory. If given model is in the list image is rotated.
-     *
-     * @return true if device is {@link #SAMSUNG_MODEL}, false otherwise
-     */
-    public static boolean isDeviceSMA50() {
-        return Build.MODEL.equals(ScreenRatioHelper.SAMSUNG_MODEL);
     }
 
     public static boolean compareDouble(double x, double y) {

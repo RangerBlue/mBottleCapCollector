@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -94,6 +95,7 @@ public abstract class CameraActivity extends Activity {
     private int cameraPreviewWidth;
     public String capturedImageURI;
     private ProgressDialog progressBar;
+    private SharedPreferences prefs;
 
     /**
      * Fixed values to ensure that preview don't have too high resolution which may cause
@@ -163,6 +165,7 @@ public abstract class CameraActivity extends Activity {
         initializeButton();
         initializeSurface();
         initializeProgressBar();
+        prefs = getSharedPreferences(WelcomeScreenActivity.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
     }
 
     @Override
@@ -253,7 +256,12 @@ public abstract class CameraActivity extends Activity {
                                 buffer.get(bytes);
                                 Bitmap originalBitmap = BitmapFactory.decodeByteArray(bytes,
                                         0, bytes.length, null);
-                                if (ScreenRatioHelper.isDeviceSMA50()) {
+                                /*
+                                   Workaround for certain models of devices where images are rotated
+                                   after being taken. Exif could not be used as we are not storing
+                                   image bitmap to device memory. If user noticed that image is
+m                                 */
+                                if (prefs.getBoolean(getString(R.string.rotate_key), false)) {
                                     Matrix matrix = new Matrix();
                                     matrix.postRotate(90);
                                     originalBitmap = Bitmap.createBitmap(originalBitmap, 0, 0,
@@ -274,6 +282,8 @@ public abstract class CameraActivity extends Activity {
                                 byte[] outputArrayCircle = streamCircle.toByteArray();
                                 save(outputArrayCircle, fileCircle);
                                 capturedImageURI = fileCircle.getPath();
+                                progressBar.dismiss();
+                                goToChoiceActivity();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -300,8 +310,6 @@ public abstract class CameraActivity extends Activity {
                         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request,
                                                        TotalCaptureResult result) {
                             super.onCaptureCompleted(session, request, result);
-                            progressBar.dismiss();
-                            goToChoiceActivity();
                         }
                     };
             cameraDevice.createCaptureSession(outputSurfaces,

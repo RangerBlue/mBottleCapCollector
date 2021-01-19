@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ public class LoginActivity extends Activity {
     private TextView textViewPasswordOrState;
     private EditText editTextPassword;
     private Button buttonLoginLogout;
+    private Switch rotateSwitch;
     private SharedPreferences prefs;
     private ProgressDialog progressBar;
     private CharSequence loggingMessage;
@@ -41,6 +44,22 @@ public class LoginActivity extends Activity {
 
         textViewPasswordOrState = findViewById(R.id.textViewPasswordOrState);
         editTextPassword = findViewById(R.id.editTextPassword);
+
+        rotateSwitch = findViewById(R.id.switch_button);
+        rotateSwitch.setChecked(prefs.getBoolean(getString(R.string.rotate_key), false));
+        rotateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            SharedPreferences.Editor editor = prefs.edit();
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    editor.putBoolean(getString(R.string.rotate_key), true);
+                }
+                else {
+                    editor.putBoolean(getString(R.string.rotate_key), false);
+                }
+                editor.commit();
+            }
+        });
 
         buttonLoginLogout = findViewById(R.id.buttonLoginLogout);
         buttonLoginLogout.setOnClickListener(view -> {
