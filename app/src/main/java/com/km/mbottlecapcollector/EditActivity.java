@@ -36,10 +36,7 @@ public class EditActivity extends CapActivity {
                                 getApplicationContext(),
                                 getText(R.string.successfully_updated_cap),
                                 Toast.LENGTH_SHORT).show();
-                        Cap cap = response.body();
-                        Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
-                        CapActivity.putValuesForCapIntent(intent, cap);
-                        startActivity(intent);
+                        goToReadCapActivity(response.body());
                     } else if (responseCode == 404) {
                         Toast.makeText(
                                 getApplicationContext(),
@@ -93,5 +90,12 @@ public class EditActivity extends CapActivity {
     public void initializeEditableFields() {
         textViewEditCapName = findViewById(R.id.editTextCapName);
         textViewEditDescription = findViewById(R.id.editTextDescription);
+    }
+
+    private void goToReadCapActivity(Cap cap) {
+        Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
+        CapActivity.putValuesForCapIntent(intent, cap);
+        this.finish();
+        startActivity(intent);
     }
 }
