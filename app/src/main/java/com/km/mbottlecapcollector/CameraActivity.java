@@ -512,6 +512,7 @@ m                                 */
         Intent intent = new Intent(this, ChoiceActivity.class);
         intent.putExtra(EXTRA_CAPTURED_IMAGE_URI, capturedImageURI);
         intent.putExtra(EXTRA_CLASS_NAME, getClass().getName());
+        this.finish();
         startActivity(intent);
     }
 

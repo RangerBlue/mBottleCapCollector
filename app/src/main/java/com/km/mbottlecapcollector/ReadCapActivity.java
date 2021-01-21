@@ -125,7 +125,7 @@ public class ReadCapActivity extends CapActivity {
     private void goToEditActivity() {
         Intent intent = new Intent(this, EditActivity.class);
         putValuesForCapIntent(intent, capID, url, textViewEditCapName.getText().toString(),
-                textViewEditDescription.getText().toString(), textViewCreationDate.getText().toString());
+                textViewEditDescription.getText().toString(), dateText);
         this.finish();
         startActivity(intent);
     }

@@ -21,6 +21,7 @@ public abstract class CapActivity extends Activity {
     public TextView textViewEditCapName;
     public TextView textViewEditDescription;
     public TextView textViewCreationDate;
+    public String dateText;
     public Button buttonLeft;
     public Button buttonRight;
     public long capID;
@@ -40,7 +41,8 @@ public abstract class CapActivity extends Activity {
         Picasso.get().load(url).into(imageViewCapPicture);
         textViewEditCapName.setText(getIntent().getStringExtra(EXTRA_CAP_NAME));
         textViewEditDescription.setText(getIntent().getStringExtra(EXTRA_DESCRIPTION));
-        textViewCreationDate.setText(getIntent().getStringExtra(EXTRA_CREATION_DATE));
+        dateText = getIntent().getStringExtra(EXTRA_CREATION_DATE);
+        textViewCreationDate.setText(trimDate(dateText));
         capID = getIntent().getLongExtra(EXTRA_ID, 0);
     }
 
@@ -67,5 +69,9 @@ public abstract class CapActivity extends Activity {
                                              String googleDriveName, String creationDate) {
         putValuesForCapIntent(intent, new Cap(id, url, googleDriveName, capName, creationDate));
         intent.putExtra(EXTRA_URL, url);
+    }
+
+    private String trimDate(String date){
+        return date.replace("T", " ").substring(0, date.length()-4);
     }
 }

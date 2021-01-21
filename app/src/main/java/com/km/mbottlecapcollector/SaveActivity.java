@@ -142,11 +142,7 @@ public class SaveActivity extends Activity {
             @Override
             public void onResponse(Call<Cap> call, Response<Cap> response) {
                 progressBar.dismiss();
-                Cap cap = response.body();
-                Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
-                CapActivity.putValuesForCapIntent(intent, cap);
-                progressBar.dismiss();
-                startActivity(intent);
+                goToReadActivity(response.body());
             }
 
             @Override
@@ -158,5 +154,13 @@ public class SaveActivity extends Activity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void goToReadActivity(Cap cap) {
+        Intent intent = new Intent(getApplicationContext(), ReadCapActivity.class);
+        CapActivity.putValuesForCapIntent(intent, cap);
+        progressBar.dismiss();
+        this.finish();
+        startActivity(intent);
     }
 }

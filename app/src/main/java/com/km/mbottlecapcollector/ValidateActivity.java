@@ -126,6 +126,7 @@ public class ValidateActivity extends Activity {
 
     private void goToMenuActivity() {
         Intent intent = new Intent(this, MenuActivity.class);
+        this.finish();
         startActivity(intent);
     }
 

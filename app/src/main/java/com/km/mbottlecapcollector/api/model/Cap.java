@@ -89,7 +89,7 @@ public class Cap implements Parcelable {
     }
 
     public String getCreationDate() {
-        return creationDate.replace("T", " ").substring(0, creationDate.length()-4);
+        return creationDate;
     }
 
     public void setCreationDate(String creationDate) {

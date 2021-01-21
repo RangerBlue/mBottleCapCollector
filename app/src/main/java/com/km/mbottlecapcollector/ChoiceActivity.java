@@ -52,14 +52,7 @@ public class ChoiceActivity extends Activity {
         goToValidateScreen = allowToGoToValidateScreen(className);
         retryButton = findViewById(R.id.buttonRetry);
         retryButton.setOnClickListener(view -> {
-            try {
-                Class<?> returnActivity = Class.forName(className);
-                Intent intent = new Intent(this, returnActivity);
-                startActivity(intent);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
+            goToReturnActivity(className);
         });
 
         yesButton = findViewById(R.id.buttonYes);
@@ -135,6 +128,7 @@ public class ChoiceActivity extends Activity {
         intent.putExtra(EXTRA_CAP_8, ValidateCapResponse.getLinkWithPixels(urls.get(8), pixels));
         intent.putExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI, imageURI);
         intent.putExtra(EXTRA_DISTRIBUTION, response.getSimilarityDistribution());
+        this.finish();
         startActivity(intent);
     }
 
@@ -143,7 +137,19 @@ public class ChoiceActivity extends Activity {
         intent.putExtra(CameraActivity.EXTRA_CAPTURED_IMAGE_URI, imageURI);
         intent.putExtra(EXTRA_CAP_URL,
                 response.getFileLocation(ScreenRatioHelper.getWhatCapAreYouCapWidth()));
+        this.finish();
         startActivity(intent);
+    }
+
+    private void goToReturnActivity(String className) {
+        try {
+            Class<?> returnActivity = Class.forName(className);
+            Intent intent = new Intent(this, returnActivity);
+            this.finish();
+            startActivity(intent);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean allowToGoToValidateScreen(String className) {
